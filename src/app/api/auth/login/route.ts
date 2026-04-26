@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createSessionToken } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 const loginLimiter = rateLimit({ interval: 60_000, maxRequests: 5 });
 
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (supabaseUrl && supabaseServiceKey) {
+    const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin.rpc("verify_admin", {
       p_email: email,
       p_password: password,

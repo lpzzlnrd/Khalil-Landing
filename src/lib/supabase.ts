@@ -1,18 +1,23 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let adminClient: SupabaseClient<any, "public", any> | null = null;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("Supabase credentials missing in production");
-  } else {
-    console.warn("Supabase credentials missing. Database features will be disabled.");
+/**
+ * Returns a cached server-side Supabase client.
+ * Throws only when the client is actually needed by a request.
+ */
+export function getSupabaseAdmin() {
+  if (adminClient) {
+    return adminClient;
   }
-}
 
-// Service role client (Server-side ONLY)
-export const supabaseAdmin = createClient(
-  supabaseUrl || "",
-  supabaseServiceKey || ""
-);
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Supabase credentials are missing. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  adminClient = createClient(supabaseUrl, supabaseServiceKey);
+  return adminClient;
+}
