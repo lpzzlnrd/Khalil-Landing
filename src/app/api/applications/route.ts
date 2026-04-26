@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { applicationSchema } from "@/lib/schemas";
 import { isAuthenticated } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendConfirmationEmail, sendAdminNotification } from "@/lib/email";
 
 // Rate limit: 10 applications per minute per IP
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await req.json();
     const parsed = applicationSchema.parse(body);
 
@@ -82,6 +83,14 @@ export async function GET() {
   const authed = await isAuthenticated();
   if (!authed) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  let supabaseAdmin;
+  try {
+    supabaseAdmin = getSupabaseAdmin();
+  } catch (error) {
+    console.error("Supabase init error:", error);
+    return NextResponse.json({ error: "Servicio de base de datos no disponible" }, { status: 500 });
   }
 
   const { data, error } = await supabaseAdmin
