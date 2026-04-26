@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Only protect /checkout (not /checkout/login)
@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
       await jwtVerify(token, new TextEncoder().encode(sessionSecret));
       return NextResponse.next();
     } catch {
-      // Invalid/expired token — clear cookie and redirect
+      // Invalid/expired token: clear cookie and redirect
       const response = NextResponse.redirect(new URL("/checkout/login", req.url));
       response.cookies.delete("admin_session");
       return response;
