@@ -7,13 +7,14 @@ import { Button } from "@/components/ui/button";
 interface FormStepProps {
   dateLabel: string;
   timeLabel: string;
+  timezoneNote?: string; // e.g. "16:00 tu hora" when user is in a different TZ
   onSubmit: (data: { name: string; email: string; phone: string; answers: Record<string, string> }) => Promise<void>;
   onBack: () => void;
   submitting: boolean;
   errorMessage: string | null;
 }
 
-export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, errorMessage }: FormStepProps) {
+export function FormStep({ dateLabel, timeLabel, timezoneNote, onSubmit, onBack, submitting, errorMessage }: FormStepProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -186,6 +187,9 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, e
         <div>
           <div className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">Hora</div>
           <div className="mt-1 font-serif text-base text-ivory">{timeLabel}</div>
+          {timezoneNote && (
+            <div className="mt-0.5 font-mono text-[9px] text-muted">{timezoneNote}</div>
+          )}
         </div>
       </div>
 

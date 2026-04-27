@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import ical, { ICalCalendarMethod } from "ical-generator";
+import { BUSINESS_TZ, BUSINESS_TZ_LABEL } from "@/lib/timezone";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -19,23 +20,27 @@ interface ApplicationData {
 function generateICS(data: ApplicationData) {
   const [year, month, day] = data.date.split("-").map(Number);
   const [hour, minute] = data.time.split(":").map(Number);
-  
+
   const start = new Date(year, month - 1, day, hour, minute);
   const end = new Date(start.getTime() + 30 * 60 * 1000); // 30 min duration
 
-  const calendar = ical({ name: "Kley Studio Meeting" });
+  const calendar = ical({
+    name: "Kley Studio Meeting",
+    timezone: BUSINESS_TZ,
+  });
   calendar.method(ICalCalendarMethod.REQUEST);
-  
+
   calendar.createEvent({
     start,
     end,
+    timezone: BUSINESS_TZ,
     summary: "Reunión Estratégica — Carousels Selling",
     description: `Hola ${data.name}, aquí tienes el link para nuestra reunión: ${data.meetingLink}`,
     location: data.meetingLink,
     url: data.meetingLink,
     organizer: {
       name: "Kley Studio",
-      email: "noreply@kleystudio.com" // Matches fromEmail domain for better deliverability
+      email: "noreply@kleystudio.com"
     }
   });
 
@@ -78,7 +83,7 @@ export async function sendConfirmationEmail(data: ApplicationData) {
 
         <div style="border: 1px solid rgba(212,176,120,0.14); padding: 24px; margin-bottom: 28px;">
           <p style="margin: 0 0 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #7a7467;">Detalles de la sesión</p>
-          <p style="margin: 0; font-size: 16px; color: #d4b078;">${data.date} a las ${data.time} CET</p>
+          <p style="margin: 0; font-size: 16px; color: #d4b078;">${data.date} a las ${data.time} ${BUSINESS_TZ_LABEL}</p>
           
           <p style="margin: 20px 0 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #7a7467;">Link de la reunión</p>
           <a href="${data.meetingLink}" style="color: #f1ece1; text-decoration: underline; font-size: 14px;">Unirse a Google Meet →</a>
