@@ -1,5 +1,5 @@
 -- Supabase Migration: Create verify_admin RPC function
--- This function is called from the API to validate admin credentials
+-- funcion para validar las credenciales desde el front
 
 CREATE OR REPLACE FUNCTION public.verify_admin(p_email text, p_password text)
 RETURNS boolean

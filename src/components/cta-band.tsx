@@ -15,10 +15,10 @@ export function CtaBand({ onOpenModal }: CtaBandProps) {
       <Shell>
         <Reveal>
           <Eyebrow centered className="justify-center">
-            Solo 7 plazas por mes
+            Aplicar
           </Eyebrow>
           <h2 className="mx-auto mt-6 max-w-[18ch] font-serif text-[clamp(38px,5vw,68px)] font-light leading-[1.05] tracking-[-0.02em]">
-            ¿Listo para <em className="text-gold italic font-light">instalar el sistema?</em>
+            ¿Cómo puedo <em className="text-gold italic font-light">comenzar?</em>
           </h2>
           <div className="mt-3.5">
             <Button size="xl" onClick={onOpenModal}>

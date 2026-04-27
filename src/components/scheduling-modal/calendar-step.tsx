@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,16 +14,50 @@ const MONTHS = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
-const DAYS = ["L", "M", "X", "J", "V", "S", "D"];
+const DAYS = ["L", "M", "MI", "J", "V", "S", "D"]; //cambiamos miercoles a MI para no sre confundido
 
 function formatLabel(d: Date) {
   return `${d.getDate()} de ${MONTHS[d.getMonth()]}`;
+}
+
+function toDateKey(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepProps) {
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [bookedDates, setBookedDates] = useState<Set<string>>(new Set());
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
+
+  useEffect(() => {
+    const month = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}`;
+    const controller = new AbortController();
+
+    async function loadAvailability() {
+      setLoadingAvailability(true);
+      try {
+        const res = await fetch(`/api/applications?availability=1&month=${month}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error("availability_error");
+        const data = await res.json() as { bookedDates?: string[] };
+        setBookedDates(new Set(data.bookedDates ?? []));
+      } catch {
+        setBookedDates(new Set());
+      } finally {
+        setLoadingAvailability(false);
+      }
+    }
+
+    loadAvailability();
+    return () => controller.abort();
+  }, [viewYear, viewMonth]);
 
   const cells = useMemo(() => {
     const first = new Date(viewYear, viewMonth, 1);
@@ -35,17 +69,16 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
-      const dayOfWeek = date.getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
       const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const isBooked = bookedDates.has(toDateKey(date));
       result.push({
         day: d,
-        available: !isWeekend && !isPast,
+        available: !isPast && !isBooked,
         date,
       });
     }
     return result;
-  }, [viewYear, viewMonth, today]);
+  }, [viewYear, viewMonth, today, bookedDates]);
 
   const changeMonth = (dir: number) => {
     let m = viewMonth + dir;
@@ -76,12 +109,16 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
         </span>
         <div className="flex gap-2">
           <button
+            aria-label="Mes anterior"
+            title="Mes anterior"
             className="flex h-8 w-8 items-center justify-center border border-line text-ivory-dim transition-all duration-200 hover:border-gold hover:text-gold"
             onClick={() => changeMonth(-1)}
           >
             <ChevronLeft className="h-[10px] w-[10px]" />
           </button>
           <button
+            aria-label="Mes siguiente"
+            title="Mes siguiente"
             className="flex h-8 w-8 items-center justify-center border border-line text-ivory-dim transition-all duration-200 hover:border-gold hover:text-gold"
             onClick={() => changeMonth(1)}
           >
@@ -129,7 +166,7 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
       {/* Footer */}
       <div className="mt-8 flex items-center justify-between border-t border-line pt-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-          Paso 1 / 3
+          {loadingAvailability ? "Cargando disponibilidad..." : "Paso 1 / 3"}
         </span>
         <Button
           onClick={onNext}

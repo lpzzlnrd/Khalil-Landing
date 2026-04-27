@@ -5,15 +5,15 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal } from "@/components/ui/reveal";
 
 const items = [
-  "Creación del Espejo de marca",
-  "Análisis profundo de contenido y KPIs",
+  "Creación del “Espejo de marca”",
+  "Analisis profundo de contenido y KPIs",
   "Planeación de carruseles y formatos",
   "Guionizado de carruseles",
   "Creación y diseño de carruseles",
   "Carruseles nuevos cada día",
   "CRM de métricas y KPIs de contenido",
   "Calendario de publicación",
-  "Carpetas de Drive con carruseles por semanas",
+  "Carpetas de Drive con los carruseles ordenados por semanas.",
   "Documento de guionizado",
 ];
 
@@ -23,14 +23,14 @@ export function Deliverables() {
       <Shell>
         <div className="mb-[clamp(60px,8vw,100px)] grid grid-cols-[1fr_1.2fr] items-end gap-[60px] max-[780px]:grid-cols-1 max-[780px]:gap-6">
           <Reveal>
-            <Eyebrow>02 / Entregables</Eyebrow>
+            <Eyebrow>Sistema de Contenido</Eyebrow>
             <h2 className="mt-5 font-serif text-[clamp(38px,5vw,68px)] font-light leading-[1.05] tracking-[-0.02em]">
               ¿Qué obtienes <em className="text-gold italic font-light">al entrar?</em>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-[62ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
-              Lista completa de entregables del sistema de contenido. Cada pieza — desde el espejo de marca hasta el CRM — construida y mantenida por el equipo.
+              Estos son todos los entregables que obtienes una vez entras a Carousels Selling durante los meses activos ⇩
             </p>
           </Reveal>
         </div>
