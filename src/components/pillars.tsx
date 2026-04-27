@@ -21,14 +21,14 @@ export function Pillars() {
         {/* Section Head */}
         <div className="mb-[clamp(60px,8vw,100px)] grid grid-cols-[1fr_1.2fr] items-end gap-[60px] max-[780px]:grid-cols-1 max-[780px]:gap-6">
           <Reveal>
-            <Eyebrow>01 / Sistema</Eyebrow>
+            <Eyebrow>Carousels Selling</Eyebrow>
             <h2 className="mt-5 font-serif text-[clamp(38px,5vw,68px)] font-light leading-[1.05] tracking-[-0.02em]">
-              Dos pilares. <em className="text-gold italic font-light">Un sistema.</em>
+              Captación <em className="text-gold italic font-light">Automatizada</em>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-[62ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
-              Un embudo dual que opera en paralelo al creador. Un flujo capta, otro convierte, y ninguno depende de que tú subas contenido ese día.
+              Adquisición con Carruseles
             </p>
           </Reveal>
         </div>
@@ -43,13 +43,13 @@ export function Pillars() {
                   Captación <em className="text-gold italic font-light">Automatizada</em>
                 </h3>
                 <p className="text-sm leading-[1.7] text-ivory-dim">
-                  Ante un aumento del volumen de entrada de leads, necesitas un sistema capaz de afrontar dicho volumen y evitar cuellos de botella futuros. Aquí instalamos un sistema automático en tu cuenta.
+                  Ante un aumento del volumen de entrada de leads, necesitas un sistema capaz afrontar dicho volumen y evitar cuellos de botella futuros. Aquí instalamos un sistema automático en tu cuenta que se encarga del flujo de leads, que permite que los setters solamente traten con leads muy calificados y no perder tiempo con curiosos.
                 </p>
                 <ul className="mt-6 list-none">
                   {tickItems([
-                    "Sistema paralelo de captación por DM",
+                    "Instalamos un sistema paralelo de captación por DM",
                     "Flujo de contenido diario independiente",
-                    "Capacidad para alto volumen sin cuellos de botella",
+                    "Ante un aumento del volumen de entrada de leads, necesitas un sistema capaz afrontar dicho volumen y evitar cuellos de botella futuros.",
                   ])}
                 </ul>
               </div>
@@ -59,16 +59,16 @@ export function Pillars() {
                 <div className="relative aspect-[16/10] overflow-hidden border border-line bg-[repeating-linear-gradient(135deg,#17150f_0_10px,#1a1812_10px_20px)]">
                   <span className="absolute top-[14px] left-[14px] flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-gold">
                     <span className="h-1.5 w-1.5 rounded-full bg-gold animate-[blink_1.6s_ease-in-out_infinite]" />
-                    DIAGRAMA · CAPTACIÓN
+                    grafico o imagen
                   </span>
                   <span className="absolute bottom-[14px] left-[14px] font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                    / Sistema automático DM
+                    / Captación Automatizada
                   </span>
                 </div>
                 <div>
-                  <Eyebrow>Flujo Paralelo</Eyebrow>
+                  <Eyebrow>Captación Automatizada</Eyebrow>
                   <p className="mt-2.5 text-sm leading-[1.7] text-ivory-dim">
-                    Captación 24/7 sin depender de tu disponibilidad. El lead entra, el sistema responde.
+                    Instalamos un sistema paralelo de captación por DM
                   </p>
                 </div>
               </div>
@@ -85,16 +85,16 @@ export function Pillars() {
                 <div className="relative aspect-[3/4] overflow-hidden border border-line bg-[repeating-linear-gradient(-45deg,#17150f_0_10px,#1a1812_10px_20px)]">
                   <span className="absolute top-[14px] left-[14px] flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-gold">
                     <span className="h-1.5 w-1.5 rounded-full bg-gold animate-[blink_1.6s_ease-in-out_infinite]" />
-                    CARRUSEL · EJEMPLO
+                    grafico o imagen
                   </span>
                   <span className="absolute bottom-[14px] left-[14px] font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                    / Flujo de contenido diario
+                    / Adquisición con Carruseles
                   </span>
                 </div>
                 <div>
-                  <Eyebrow>Embudo Dual</Eyebrow>
+                  <Eyebrow>Adquisición con Carruseles</Eyebrow>
                   <p className="mt-2.5 text-sm leading-[1.7] text-ivory-dim">
-                    Dos flujos independientes, una sola conversión. Tu tiempo deja de ser el cuello de botella.
+                    Flujo de contenido diario independiente
                   </p>
                 </div>
               </div>
@@ -106,12 +106,12 @@ export function Pillars() {
                   Adquisición <em className="text-gold italic font-light">con Carruseles</em>
                 </h3>
                 <p className="text-sm leading-[1.7] text-ivory-dim">
-                  Un negocio que vende no puede depender únicamente del tiempo para grabar del creador — eso no es escalable. Aquí la solución: un sistema que publique carruseles de forma diaria, que funcione como un segundo flujo de contenido totalmente independiente del tiempo del creador.
+                  Un negocio que vende no puede depender únicamente del tiempo para grabar del creador, eso no es escalable en el tiempo, aquí la solución: Un sistema que publique carruseles de forma diaria, que funcione como un segundo flujo de contenido totalmente idependiente del tiempo del creador. Pensados para captar clientes de forma constante.
                 </p>
                 <ul className="mt-6 list-none">
                   {tickItems([
-                    "Publicación diaria de carruseles",
-                    "Flujo independiente del creador",
+                    "Un sistema que publique carruseles de forma diaria",
+                    "que funcione como un segundo flujo de contenido totalmente idependiente del tiempo del creador",
                     "Pensados para captar clientes de forma constante",
                   ])}
                 </ul>

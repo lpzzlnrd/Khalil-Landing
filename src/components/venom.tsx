@@ -6,8 +6,8 @@ import { Reveal } from "@/components/ui/reveal";
 
 const features = [
   "Captación de leads 24/7",
-  "IA Integrada",
-  "100% humanizado",
+  "Inteligencia Artificial Integrada",
+  "100% humanizado, 0 robotico",
   "Memoria Inteligente Específica",
   "Seguimientos Específicos",
   "2 fases de segmentación",
@@ -26,26 +26,14 @@ export function Venom() {
           <Reveal>
             <span className="mb-[22px] inline-flex items-center gap-2.5 rounded-full border border-line-strong px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-gold">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-[ring_2s_ease-out_infinite]" />
-              Automatización · ManyChat
+              Sistema “VENOM”
             </span>
             <h2 className="font-serif text-[clamp(38px,5vw,68px)] font-light leading-[1.05] tracking-[-0.02em]">
               Sistema <em className="text-gold italic font-light">VENOM</em>
             </h2>
             <p className="mt-6 max-w-[62ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
-              Se trata de una Automatización de ManyChat con funcionalidades pensadas para operar 24/7 sin perder humanidad ni calificación.
+              Se trata de una Automatización de Manychat con las siguientes funcionalidades:
             </p>
-
-            <div className="mt-10 grid grid-cols-2 gap-px border border-line bg-line">
-              {[
-                { val: "24/7", label: "Activo" },
-                { val: "100%", label: "Humanizado" },
-              ].map((s) => (
-                <div key={s.label} className="bg-bg p-5">
-                  <div className="font-serif text-4xl italic leading-none text-gold">{s.val}</div>
-                  <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">{s.label}</div>
-                </div>
-              ))}
-            </div>
           </Reveal>
 
           <Reveal delay={0.15}>

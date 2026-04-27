@@ -16,13 +16,13 @@ export function FinalCta({ onOpenModal }: FinalCtaProps) {
       <Shell>
         <Reveal>
           <Eyebrow centered className="justify-center">
-            Última sección
+            Aplicar
           </Eyebrow>
           <h2 className="mx-auto mt-5 mb-7 max-w-[16ch] font-serif text-[clamp(42px,6.2vw,88px)] font-light leading-[1.05] tracking-[-0.02em]">
-            Instala el <em className="text-gold italic font-light">sistema.</em>
+            ¿Cómo puedo <em className="text-gold italic font-light">comenzar?</em>
           </h2>
           <p className="mx-auto mb-11 max-w-[52ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
-            7 plazas cada mes. Si este es tu momento, aplica y hablamos.
+            Todos estuvieron en esta misma página y decidieron entrar.
           </p>
           <Button size="xl" onClick={onOpenModal}>
             Aplicar

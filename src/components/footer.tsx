@@ -6,7 +6,6 @@ export function Footer() {
       <Shell className="flex flex-wrap items-center justify-between gap-6">
         <span className="font-serif text-xs tracking-[0.5em] text-ivory font-light">S T U D I O</span>
         <span>© 2026 KLEY STUDIO · CAROUSELS SELLING</span>
-        <span>HOLA@KLEYSTUDIO.COM</span>
       </Shell>
     </footer>
   );

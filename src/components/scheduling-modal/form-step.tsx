@@ -7,18 +7,20 @@ import { Button } from "@/components/ui/button";
 interface FormStepProps {
   dateLabel: string;
   timeLabel: string;
-  onSubmit: (data: { name: string; email: string; phone: string }) => void;
+  onSubmit: (data: { name: string; email: string; phone: string }) => Promise<void>;
   onBack: () => void;
+  submitting: boolean;
+  errorMessage: string | null;
 }
 
-export function FormStep({ dateLabel, timeLabel, onSubmit, onBack }: FormStepProps) {
+export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, errorMessage }: FormStepProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, email, phone });
+    await onSubmit({ name, email, phone });
   };
 
   return (
@@ -77,6 +79,12 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack }: FormStepPro
         </div>
       </div>
 
+      {errorMessage && (
+        <div className="mt-4 border border-[rgba(212,120,120,0.3)] bg-[rgba(212,120,120,0.1)] px-4 py-3 text-sm text-[#f5b7b7]">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Footer */}
       <div className="mt-8 flex items-center justify-between border-t border-line pt-6">
         <button
@@ -87,7 +95,9 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack }: FormStepPro
           <ChevronLeft className="h-3 w-2" />
           Volver
         </button>
-        <Button type="submit">Confirmar aplicación</Button>
+        <Button type="submit" disabled={submitting} className={submitting ? "pointer-events-none opacity-60" : ""}>
+          {submitting ? "Guardando..." : "Confirmar aplicación"}
+        </Button>
       </div>
     </form>
   );

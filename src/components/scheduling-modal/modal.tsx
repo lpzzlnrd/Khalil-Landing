@@ -23,6 +23,15 @@ export function SchedulingModal({ open, onClose }: ModalProps) {
   const [selectedDateLabel, setSelectedDateLabel] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const toDateKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
 
   const reset = useCallback(() => {
     setStep(0);
@@ -30,6 +39,8 @@ export function SchedulingModal({ open, onClose }: ModalProps) {
     setSelectedDateLabel("");
     setSelectedTime("");
     setFormData({ name: "", email: "", phone: "" });
+    setSubmitError(null);
+    setSubmitting(false);
   }, []);
 
   useEffect(() => {
@@ -60,9 +71,42 @@ export function SchedulingModal({ open, onClose }: ModalProps) {
     setSelectedTime(time);
   };
 
-  const handleSubmit = (data: { name: string; email: string; phone: string }) => {
-    setFormData(data);
-    setStep(3);
+  const handleSubmit = async (data: { name: string; email: string; phone: string }) => {
+    if (!selectedDate || !selectedTime) {
+      setSubmitError("Selecciona fecha y hora antes de confirmar.");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const payload = {
+        ...data,
+        date: toDateKey(selectedDate),
+        time: selectedTime,
+      };
+
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        const errorMessage = typeof body?.error === "string" ? body.error : "No se pudo guardar la cita.";
+        setSubmitError(errorMessage);
+        return;
+      }
+
+      setFormData(data);
+      setStep(3);
+    } catch {
+      setSubmitError("No se pudo conectar con el servidor. Intenta de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -151,6 +195,8 @@ export function SchedulingModal({ open, onClose }: ModalProps) {
                   timeLabel={selectedTime}
                   onSubmit={handleSubmit}
                   onBack={() => goStep(1)}
+                  submitting={submitting}
+                  errorMessage={submitError}
                 />
               )}
               {step === 3 && (
