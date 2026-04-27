@@ -28,8 +28,8 @@ export default function Home() {
       <Nav onOpenModal={openModal} />
       <Hero onOpenModal={openModal} />
       <ServiceTitle />
-      <Pillars />
-      <Deliverables />
+      <Pillars onOpenModal={openModal} />
+      <Deliverables onOpenModal={openModal} />
       <Venom />
       <Team />
       <CtaBand onOpenModal={openModal} />

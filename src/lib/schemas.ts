@@ -1,19 +1,17 @@
 import { z } from "zod";
 
 export const applicationSchema = z.object({
-  name: z.string().min(2, "Nombre mínimo 2 caracteres").max(100, "Nombre muy largo"),
-  email: z.string().email("Email inválido").max(255, "Email muy largo"),
-  phone: z
-    .string()
-    .min(6, "Teléfono inválido")
-    .max(20, "Teléfono muy largo")
-    .regex(/^[+\d\s()-]+$/, "Formato de teléfono inválido"),
-  date: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (YYYY-MM-DD)"),
-  time: z
-    .string()
-    .regex(/^\d{2}:\d{2}$/, "Formato de hora inválido (HH:MM)"),
+  name: z.string().min(2, "El nombre es demasiado corto"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().min(6, "Teléfono inválido"),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  time: z.string().regex(/^\d{2}:\d{2}$/),
+  answers: z.record(z.string(), z.string()).optional(), //error en estos parametros
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "La contraseña es demasiado corta"),
+});

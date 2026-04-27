@@ -14,7 +14,10 @@ const MONTHS = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
-const DAYS = ["L", "M", "MI", "J", "V", "S", "D"]; //cambiamos miercoles a MI para no sre confundido
+const DAYS = ["L", "M", "MI", "J", "V", "S", "D"];
+
+// Possible slots per day (must match TimeStep)
+const TOTAL_SLOTS_COUNT = 11; 
 
 function formatLabel(d: Date) {
   return `${d.getDate()} de ${MONTHS[d.getMonth()]}`;
@@ -31,7 +34,7 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
-  const [bookedDates, setBookedDates] = useState<Set<string>>(new Set());
+  const [fullDates, setFullDates] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
   useEffect(() => {
@@ -45,11 +48,23 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
           cache: "no-store",
           signal: controller.signal,
         });
-        if (!res.ok) throw new Error("availability_error");
-        const data = await res.json() as { bookedDates?: string[] };
-        setBookedDates(new Set(data.bookedDates ?? []));
+        if (!res.ok) throw new Error("error");
+        const data = await res.json() as { appointments?: { date: string, time: string }[] };
+        
+        // Count appointments per day to see if all slots are full
+        const counts: Record<string, number> = {};
+        (data.appointments ?? []).forEach(ap => {
+          counts[ap.date] = (counts[ap.date] || 0) + 1;
+        });
+
+        const full = new Set<string>();
+        Object.entries(counts).forEach(([date, count]) => {
+          if (count >= TOTAL_SLOTS_COUNT) full.add(date);
+        });
+
+        setFullDates(full);
       } catch {
-        setBookedDates(new Set());
+        setFullDates(new Set());
       } finally {
         setLoadingAvailability(false);
       }
@@ -61,24 +76,29 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
 
   const cells = useMemo(() => {
     const first = new Date(viewYear, viewMonth, 1);
-    const startDay = (first.getDay() + 6) % 7; // Monday=0
+    const startDay = (first.getDay() + 6) % 7;
     const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    // 24h dead range calculation
+    const tomorrow = new Date();
+    tomorrow.setHours(tomorrow.getHours() + 24);
 
     const result: { day: number; available: boolean; date: Date | null }[] = [];
     for (let i = 0; i < startDay; i++) result.push({ day: 0, available: false, date: null });
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
-      const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const isBooked = bookedDates.has(toDateKey(date));
+      // It's available if it's at least 24h in the future AND not full
+      const isAvailable = date >= tomorrow && !fullDates.has(toDateKey(date));
+      
       result.push({
         day: d,
-        available: !isPast && !isBooked,
+        available: isAvailable,
         date,
       });
     }
     return result;
-  }, [viewYear, viewMonth, today, bookedDates]);
+  }, [viewYear, viewMonth, fullDates]);
 
   const changeMonth = (dir: number) => {
     let m = viewMonth + dir;
@@ -98,11 +118,10 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
       <div className="mb-7 flex items-center gap-3.5 border border-line-strong bg-[rgba(212,176,120,0.08)] px-[18px] py-3.5 text-[13px] text-ivory-dim">
         <span className="h-2 w-2 flex-none rounded-full bg-gold animate-[blink_1.6s_infinite]" />
         <span>
-          Quedan <strong className="font-medium text-gold">3 plazas</strong> este mes. Los slots se liberan en orden de aplicación.
+          Quedan <strong className="font-medium text-gold">3 plazas</strong> este mes. La agenda requiere <strong className="text-gold">24h</strong> de margen.
         </span>
       </div>
 
-      {/* Month header */}
       <div className="mb-5 flex items-center justify-between">
         <span className="font-serif text-xl text-ivory">
           {MONTHS[viewMonth]} {viewYear}
@@ -110,7 +129,6 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
         <div className="flex gap-2">
           <button
             aria-label="Mes anterior"
-            title="Mes anterior"
             className="flex h-8 w-8 items-center justify-center border border-line text-ivory-dim transition-all duration-200 hover:border-gold hover:text-gold"
             onClick={() => changeMonth(-1)}
           >
@@ -118,7 +136,6 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
           </button>
           <button
             aria-label="Mes siguiente"
-            title="Mes siguiente"
             className="flex h-8 w-8 items-center justify-center border border-line text-ivory-dim transition-all duration-200 hover:border-gold hover:text-gold"
             onClick={() => changeMonth(1)}
           >
@@ -127,7 +144,6 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
         </div>
       </div>
 
-      {/* Day headers */}
       <div className="mb-2 grid grid-cols-7 gap-1">
         {DAYS.map((d) => (
           <span key={d} className="py-2 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
@@ -136,7 +152,6 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
         ))}
       </div>
 
-      {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-1">
         {cells.map((c, i) =>
           c.day === 0 ? (
@@ -163,10 +178,9 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
         )}
       </div>
 
-      {/* Footer */}
       <div className="mt-8 flex items-center justify-between border-t border-line pt-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-          {loadingAvailability ? "Cargando disponibilidad..." : "Paso 1 / 3"}
+          {loadingAvailability ? "Cargando..." : "Paso 1 / 3"}
         </span>
         <Button
           onClick={onNext}
