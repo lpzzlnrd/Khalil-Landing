@@ -32,25 +32,44 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = applicationSchema.parse(body);
 
-    // Rule: one active appointment per day
-    const { data: bookedSameDay, error: dayCheckError } = await supabaseAdmin
+    // RULE 1: 24h dead range (at least 24h from now)
+    const minDate = new Date();
+    minDate.setHours(minDate.getHours() + 24);
+    const appointmentDate = new Date(`${parsed.date}T${parsed.time}`);
+    
+    if (appointmentDate < minDate) {
+      return NextResponse.json(
+        { error: "La cita debe agendarse con al menos 24h de antelación." },
+        { status: 400 }
+      );
+    }
+
+    // RULE 2: Double booking prevention (same date and same time)
+    const { data: alreadyBooked, error: checkError } = await supabaseAdmin
       .from("applications")
       .select("id")
       .eq("date", parsed.date)
+      .eq("time", parsed.time)
       .in("status", ["pending", "confirmed"])
       .limit(1);
 
-    if (dayCheckError) {
-      console.error("Supabase availability check error:", dayCheckError);
+    if (checkError) {
+      console.error("Supabase availability check error:", checkError);
       return NextResponse.json({ error: "No se pudo validar la disponibilidad" }, { status: 500 });
     }
 
-    if (bookedSameDay && bookedSameDay.length > 0) {
+    if (alreadyBooked && alreadyBooked.length > 0) {
       return NextResponse.json(
-        { error: "Este día ya no está disponible. Elige otra fecha." },
+        { error: "Este horario ya ha sido reservado. Elige otro." },
         { status: 409 }
       );
     }
+
+    // Generate a simple Google Meet link (pattern-based)
+    const meetingId = Math.random().toString(36).substring(2, 5) + "-" + 
+                      Math.random().toString(36).substring(2, 6) + "-" + 
+                      Math.random().toString(36).substring(2, 5);
+    const meetingLink = `https://meet.google.com/${meetingId}`;
 
     // Guardar en Supabase
     const { data, error } = await supabaseAdmin
@@ -63,6 +82,7 @@ export async function POST(req: NextRequest) {
           date: parsed.date,
           time: parsed.time,
           status: "pending",
+          meeting_link: meetingLink,
         },
       ])
       .select()
@@ -73,12 +93,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Error al guardar la aplicación" }, { status: 500 });
     }
 
-    // Enviar correos en segundo plano (no bloquean la respuesta)
+    // Enviar correos
     const emailData = {
       name: parsed.name,
       email: parsed.email,
       date: parsed.date,
       time: parsed.time,
+      meetingLink: meetingLink,
     };
 
     try {
@@ -88,7 +109,6 @@ export async function POST(req: NextRequest) {
       ]);
     } catch (e) {
       console.error("Error enviando emails:", e);
-      // No fallamos la petición si solo fallan los emails
     }
 
     return NextResponse.json({ success: true, id: data.id }, { status: 201 });
@@ -116,36 +136,40 @@ export async function GET(req: NextRequest) {
     try {
       supabaseAdmin = getSupabaseAdmin();
     } catch (error) {
-      console.error("Supabase init error:", error);
-      return NextResponse.json({ error: "Servicio de base de datos no disponible" }, { status: 500 });
+      return NextResponse.json({ error: "Servicio no disponible" }, { status: 500 });
     }
 
-    const month = req.nextUrl.searchParams.get("month") || "";
-    if (!/^\d{4}-\d{2}$/.test(month)) {
-      return NextResponse.json({ error: "Parámetro month inválido (YYYY-MM)" }, { status: 400 });
+    const date = req.nextUrl.searchParams.get("date");
+    const month = req.nextUrl.searchParams.get("month");
+
+    if (date) {
+      const { data, error } = await supabaseAdmin
+        .from("applications")
+        .select("time")
+        .eq("date", date)
+        .in("status", ["pending", "confirmed"]);
+
+      if (error) return NextResponse.json({ error: "Error" }, { status: 500 });
+      return NextResponse.json({ bookedTimes: (data || []).map((r: any) => r.time.substring(0, 5)) });
     }
 
-    const [yearStr, monthStr] = month.split("-");
-    const year = Number(yearStr);
-    const monthIndex = Number(monthStr) - 1;
-    const start = `${yearStr}-${monthStr}-01`;
-    const endDate = new Date(year, monthIndex + 1, 0);
-    const end = `${yearStr}-${monthStr}-${String(endDate.getDate()).padStart(2, "0")}`;
+    if (month) {
+      const start = `${month}-01`;
+      const [y, m] = month.split("-");
+      const end = `${y}-${m}-${new Date(Number(y), Number(m), 0).getDate()}`;
 
-    const { data, error } = await supabaseAdmin
-      .from("applications")
-      .select("date")
-      .gte("date", start)
-      .lte("date", end)
-      .in("status", ["pending", "confirmed"]);
+      const { data, error } = await supabaseAdmin
+        .from("applications")
+        .select("date, time")
+        .gte("date", start)
+        .lte("date", end)
+        .in("status", ["pending", "confirmed"]);
 
-    if (error) {
-      console.error("Supabase availability error:", error);
-      return NextResponse.json({ error: "Error al obtener disponibilidad" }, { status: 500 });
+      if (error) return NextResponse.json({ error: "Error" }, { status: 500 });
+      return NextResponse.json({ appointments: data });
     }
 
-    const bookedDates = Array.from(new Set((data || []).map((row) => row.date)));
-    return NextResponse.json({ bookedDates });
+    return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
   }
 
   const authed = await isAuthenticated();
@@ -157,8 +181,7 @@ export async function GET(req: NextRequest) {
   try {
     supabaseAdmin = getSupabaseAdmin();
   } catch (error) {
-    console.error("Supabase init error:", error);
-    return NextResponse.json({ error: "Servicio de base de datos no disponible" }, { status: 500 });
+    return NextResponse.json({ error: "Servicio no disponible" }, { status: 500 });
   }
 
   const { data, error } = await supabaseAdmin
