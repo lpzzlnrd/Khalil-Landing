@@ -18,10 +18,12 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, e
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   
-  // Extra questions
-  const [ig, setIg] = useState("");
-  const [billing, setBilling] = useState("");
-  const [bottleneck, setBottleneck] = useState("");
+  // Custom questions
+  const [profile, setProfile] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [goal, setGoal] = useState("");
+  const [frequency, setFrequency] = useState("");
+  const [partner, setPartner] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,74 +32,149 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, e
       email, 
       phone,
       answers: {
-        instagram: ig,
-        billing: billing,
-        bottleneck: bottleneck
+        perfil: profile,
+        instagram: instagram,
+        objetivo: goal,
+        frecuencia_contenido: frequency,
+        socio_representante: partner
       }
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="max-h-[60vh] overflow-y-auto pr-4 space-y-8 custom-scrollbar">
+      {/* Basic Info */}
+      <div className="space-y-6">
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Nombre completo</label>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cómo te llamas?</label>
           <input
-            type="text" required minLength={2} placeholder="Ana Martínez"
+            type="text" required minLength={2} placeholder="Ej: Leonardo Correa"
             value={name} onChange={(e) => setName(e.target.value)}
             className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
           />
         </div>
+
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Email</label>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu número? (Incluye prefijo +)</label>
           <input
-            type="email" required placeholder="ana@ejemplo.com"
+            type="tel" required placeholder="Ej: +34 123456789"
+            value={phone} onChange={(e) => setPhone(e.target.value)}
+            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu correo?</label>
+          <input
+            type="email" required placeholder="Ej: pablomatinez@gmail.com"
             value={email} onChange={(e) => setEmail(e.target.value)}
             className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Qualification Questions */}
+      <div className="space-y-6 pt-4">
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">WhatsApp</label>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Eres coach, consultor o infoproductor?</label>
+          <div className="space-y-3">
+            {[
+              "Si, soy coach, consultor o infoproductor.",
+              "Mi negocio no tiene nada que ver con eso."
+            ].map(opt => (
+              <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="radio" name="profile" required value={opt} 
+                  onChange={(e) => setProfile(e.target.value)}
+                  className="sr-only"
+                />
+                <div className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors ${profile === opt ? "border-gold" : "border-line-strong group-hover:border-gold/50"}`}>
+                  {profile === opt && <div className="h-2 w-2 rounded-full bg-gold" />}
+                </div>
+                <span className={`text-sm transition-colors ${profile === opt ? "text-ivory" : "text-ivory-dim group-hover:text-ivory"}`}>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu Instagram?</label>
           <input
-            type="tel" required placeholder="+34 600 000 000"
-            value={phone} onChange={(e) => setPhone(e.target.value)}
+            type="text" required placeholder="Ej: @kleystudio"
+            value={instagram} onChange={(e) => setInstagram(e.target.value)}
             className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
           />
         </div>
+
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Usuario Instagram</label>
-          <input
-            type="text" required placeholder="@tuusuario"
-            value={ig} onChange={(e) => setIg(e.target.value)}
-            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
-          />
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cuál es tu objetivo realista en los próximos meses?</label>
+          <div className="space-y-3">
+            {[
+              "Pasar de 1.000$ mensuales a 5.000$ al mes.",
+              "Pasar de 10.000$ mensuales a 20.000$ por mes",
+              "Pasar de 60.000$ al mes y alcanzar los 100.000$ mensuales",
+              "Salir del rango de los 100K-150K$ mensuales y poder llegar a +200K$ por mes"
+            ].map(opt => (
+              <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="radio" name="goal" required value={opt} 
+                  onChange={(e) => setGoal(e.target.value)}
+                  className="sr-only"
+                />
+                <div className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors ${goal === opt ? "border-gold" : "border-line-strong group-hover:border-gold/50"}`}>
+                  {goal === opt && <div className="h-2 w-2 rounded-full bg-gold" />}
+                </div>
+                <span className={`text-sm transition-colors ${goal === opt ? "text-ivory" : "text-ivory-dim group-hover:text-ivory"}`}>{opt}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Facturación mensual actual</label>
-        <select 
-          required value={billing} onChange={(e) => setBilling(e.target.value)}
-          className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold appearance-none"
-        >
-          <option value="" disabled className="bg-bg text-muted italic">Selecciona una opción</option>
-          <option value="0-1k" className="bg-bg">0 - 1.000€</option>
-          <option value="1k-5k" className="bg-bg">1.000€ - 5.000€</option>
-          <option value="5k-10k" className="bg-bg">5.000€ - 10.000€</option>
-          <option value="10k+" className="bg-bg">Más de 10.000€</option>
-        </select>
-      </div>
+        <div>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cuánto contenido subes por semana?</label>
+          <div className="space-y-3">
+            {[
+              "Publico contenido una sola vez por semana.",
+              "Publico contenido entre 3 y 5 veces por semana.",
+              "Publico contenido nuevo todos los días.",
+              "Publico contenido más de una vez al día, todos los días."
+            ].map(opt => (
+              <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="radio" name="frequency" required value={opt} 
+                  onChange={(e) => setFrequency(e.target.value)}
+                  className="sr-only"
+                />
+                <div className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors ${frequency === opt ? "border-gold" : "border-line-strong group-hover:border-gold/50"}`}>
+                  {frequency === opt && <div className="h-2 w-2 rounded-full bg-gold" />}
+                </div>
+                <span className={`text-sm transition-colors ${frequency === opt ? "text-ivory" : "text-ivory-dim group-hover:text-ivory"}`}>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </div>
 
-      <div>
-        <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu mayor cuello de botella?</label>
-        <textarea
-          required placeholder="Ej: No tengo tiempo para grabar, mis leads no están calificados..."
-          value={bottleneck} onChange={(e) => setBottleneck(e.target.value)}
-          className="w-full border border-line-strong bg-bg-2 p-4 font-serif text-lg text-ivory outline-none focus:border-gold min-h-[100px]"
-        />
+        <div>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Tienes algún socio del negocio o representante que tenga que estar contigo en la llamada?</label>
+          <div className="space-y-3">
+            {[
+              "No, yo decido todo por mi cuenta.",
+              "Si, voy a entrar con alguien más."
+            ].map(opt => (
+              <label key={opt} className="flex items-center gap-3 cursor-pointer group">
+                <input 
+                  type="radio" name="partner" required value={opt} 
+                  onChange={(e) => setPartner(e.target.value)}
+                  className="sr-only"
+                />
+                <div className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors ${partner === opt ? "border-gold" : "border-line-strong group-hover:border-gold/50"}`}>
+                  {partner === opt && <div className="h-2 w-2 rounded-full bg-gold" />}
+                </div>
+                <span className={`text-sm transition-colors ${partner === opt ? "text-ivory" : "text-ivory-dim group-hover:text-ivory"}`}>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Summary */}
@@ -119,7 +196,7 @@ export function FormStep({ dateLabel, timeLabel, onSubmit, onBack, submitting, e
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between border-t border-line pt-6">
+      <div className="sticky bottom-0 bg-bg pt-6 pb-2 border-t border-line flex items-center justify-between">
         <button
           type="button"
           className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.15em] text-muted hover:text-gold transition-colors"

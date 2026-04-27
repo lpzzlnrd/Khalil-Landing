@@ -118,7 +118,7 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
       <div className="mb-7 flex items-center gap-3.5 border border-line-strong bg-[rgba(212,176,120,0.08)] px-[18px] py-3.5 text-[13px] text-ivory-dim">
         <span className="h-2 w-2 flex-none rounded-full bg-gold animate-[blink_1.6s_infinite]" />
         <span>
-          Quedan <strong className="font-medium text-gold">3 plazas</strong> este mes. La agenda requiere <strong className="text-gold">24h</strong> de margen.
+          Quedan <strong className="font-medium text-gold">2 plazas</strong> este mes. <strong className="font-medium text-gold"> Agenda tu llamada antes de que se agoten.</strong>
         </span>
       </div>
 
