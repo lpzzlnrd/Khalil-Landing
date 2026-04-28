@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BUSINESS_TZ } from "@/lib/timezone";
 
 interface CalendarStepProps {
   selectedDate: Date | null;
@@ -79,9 +80,12 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
     const startDay = (first.getDay() + 6) % 7;
     const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-    // 24h dead range calculation
-    const tomorrow = new Date();
-    tomorrow.setHours(tomorrow.getHours() + 24);
+    // 24h dead range calculation — in business timezone
+    const now = new Date();
+    const nowInBusiness = new Date(
+      now.toLocaleString("en-US", { timeZone: BUSINESS_TZ })
+    );
+    const tomorrow = new Date(nowInBusiness.getTime() + 24 * 60 * 60 * 1000);
 
     const result: { day: number; available: boolean; date: Date | null }[] = [];
     for (let i = 0; i < startDay; i++) result.push({ day: 0, available: false, date: null });

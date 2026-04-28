@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 interface SuccessStepProps {
   dateLabel: string;
   timeLabel: string;
+  timezoneNote?: string;
   email: string;
   onClose: () => void;
 }
 
-export function SuccessStep({ dateLabel, timeLabel, email, onClose }: SuccessStepProps) {
+export function SuccessStep({ dateLabel, timeLabel, timezoneNote, email, onClose }: SuccessStepProps) {
   return (
     <div className="py-[30px] text-center">
       {/* Check icon */}
@@ -28,7 +29,7 @@ export function SuccessStep({ dateLabel, timeLabel, email, onClose }: SuccessSte
       <div className="mx-auto max-w-[360px] border border-line text-left">
         {[
           { label: "Reservado", value: dateLabel },
-          { label: "Hora", value: timeLabel },
+          { label: "Hora", value: timezoneNote ? `${timeLabel} (${timezoneNote})` : timeLabel },
           { label: "Email", value: email },
           { label: "Estado", value: "Pendiente", gold: true },
         ].map((row, i, arr) => (

@@ -4,6 +4,7 @@ import { isAuthenticated } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendConfirmationEmail, sendAdminNotification } from "@/lib/email";
+import { BUSINESS_TZ } from "@/lib/timezone";
 
 // Rate limit: 10 applications per minute per IP
 const applicationLimiter = rateLimit({ interval: 60_000, maxRequests: 10 });
@@ -32,11 +33,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = applicationSchema.parse(body);
 
-    // RULE 1: 24h dead range (at least 24h from now)
-    const minDate = new Date();
-    minDate.setHours(minDate.getHours() + 24);
-    const appointmentDate = new Date(`${parsed.date}T${parsed.time}`);
-    
+    // RULE 1: 24h dead range (at least 24h from now, in business TZ)
+    const now = new Date();
+    const nowInBusiness = new Date(
+      now.toLocaleString("en-US", { timeZone: BUSINESS_TZ })
+    );
+    const minDate = new Date(nowInBusiness.getTime() + 24 * 60 * 60 * 1000);
+    // Appointment date/time is already in business TZ
+    const [aY, aM, aD] = parsed.date.split("-").map(Number);
+    const [aH, aMin] = parsed.time.split(":").map(Number);
+    const appointmentDate = new Date(aY, aM - 1, aD, aH, aMin);
+
     if (appointmentDate < minDate) {
       return NextResponse.json(
         { error: "La cita debe agendarse con al menos 24h de antelación." },

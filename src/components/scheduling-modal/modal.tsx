@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { Shell } from "@/components/ui/shell";
@@ -8,6 +8,7 @@ import { CalendarStep } from "./calendar-step";
 import { TimeStep } from "./time-step";
 import { FormStep } from "./form-step";
 import { SuccessStep } from "./success-step";
+import { BUSINESS_TZ, BUSINESS_TZ_LABEL } from "@/lib/timezone";
 
 interface SchedulingModalProps {
   open: boolean;
@@ -24,6 +25,30 @@ export function SchedulingModal({ open, onClose }: SchedulingModalProps) {
   const [applicantEmail, setApplicantEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /** Compute a timezone note for users outside the business TZ */
+  const timezoneNote = useMemo(() => {
+    if (!selectedDate || !selectedTime) return undefined;
+    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (userTZ === BUSINESS_TZ) return undefined;
+
+    const y = selectedDate.getFullYear();
+    const m = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const d = String(selectedDate.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${m}-${d}`;
+
+    // Convert business time to user local time
+    const ref = new Date(`${dateStr}T${selectedTime}:00`);
+    const businessRef = new Date(ref.toLocaleString("en-US", { timeZone: BUSINESS_TZ }));
+    const localRef = new Date(ref.toLocaleString("en-US"));
+    const diffMs = localRef.getTime() - businessRef.getTime();
+    const localTime = new Date(ref.getTime() + diffMs);
+
+    const localStr = localTime.toLocaleTimeString("es-ES", {
+      hour: "2-digit", minute: "2-digit", hour12: false,
+    });
+    return `${localStr} tu hora`;
+  }, [selectedDate, selectedTime]);
 
   const handleSelectDate = (date: Date, label: string) => {
     setSelectedDate(date);
@@ -130,6 +155,7 @@ export function SchedulingModal({ open, onClose }: SchedulingModalProps) {
                 <FormStep
                   dateLabel={dateLabel}
                   timeLabel={selectedTime}
+                  timezoneNote={timezoneNote}
                   onSubmit={handleSubmitForm}
                   onBack={() => setStep("time")}
                   submitting={submitting}
@@ -137,11 +163,12 @@ export function SchedulingModal({ open, onClose }: SchedulingModalProps) {
                 />
               )}
               {step === "success" && (
-                <SuccessStep 
+                <SuccessStep
                   dateLabel={dateLabel}
                   timeLabel={selectedTime}
+                  timezoneNote={timezoneNote}
                   email={applicantEmail}
-                  onClose={handleClose} 
+                  onClose={handleClose}
                 />
               )}
             </div>
