@@ -20,10 +20,17 @@ export function SuccessStep({ dateLabel, timeLabel, timezoneNote, email, onClose
         <span className="absolute inset-[-8px] rounded-full border border-gold opacity-30 animate-[ring_2s_ease-out_infinite]" />
       </div>
 
-      <h4 className="mb-3.5 font-serif text-[28px] font-light">Aplicación recibida</h4>
-      <p className="mx-auto mb-7 max-w-[42ch] text-ivory-dim">
-        Hemos enviado la confirmación a tu email. Si tu caso encaja, el equipo te contactará en las próximas 24–48h para cerrar la llamada.
+      <h4 className="mb-3.5 font-serif text-[28px] font-light">Agenda guardada</h4>
+      <p className="mx-auto mb-4 max-w-[42ch] text-ivory-dim">
+        Hemos enviado la confirmación a tu correo con el link de la llamada.
+        <br />
+        <span className="text-xs opacity-60">(Revisa en tu bandeja de spam si no lo encuentras)</span>
       </p>
+      <div className="mx-auto mb-8 max-w-[48ch] border-y border-gold/10 py-6">
+        <p className="text-[15px] font-medium text-ivory leading-relaxed italic">
+          "Este no es el primer paso para crear o hacer crecer tu negocio, eso ya lo lograste. Este es el primer paso para escalarlo a niveles mucho más altos, y por eso te felicitamos. <span className="text-gold">¡Nos vemos dentro!</span>"
+        </p>
+      </div>
 
       {/* Meta */}
       <div className="mx-auto max-w-[360px] border border-line text-left">
