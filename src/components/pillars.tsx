@@ -17,6 +17,7 @@ const PillarCard = ({
   desc, 
   items, 
   imageLabel, 
+  videoSrc,
   reverse = false 
 }: { 
   num: string, 
@@ -25,6 +26,7 @@ const PillarCard = ({
   desc: string, 
   items: string[], 
   imageLabel: string, 
+  videoSrc?: string,
   reverse?: boolean 
 }) => (
   <div className={`grid grid-cols-1 md:grid-cols-2 border-b border-line ${reverse ? 'md:flex-row-reverse' : ''}`}>
@@ -51,13 +53,24 @@ const PillarCard = ({
         className="relative w-full aspect-[4/3] overflow-hidden border border-line-strong bg-[#0e0d0a] group"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent" />
-        <span className="absolute top-4 left-4 font-mono text-[9px] tracking-[0.2em] text-gold uppercase opacity-50">
+        <span className="absolute top-4 left-4 z-10 font-mono text-[9px] tracking-[0.2em] text-gold uppercase opacity-50">
           {imageLabel}
         </span>
         
-        {/* Placeholder for dynamic content/images */}
+        {/* Video or Placeholder */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-24 h-24 border border-gold/10 rounded-full animate-pulse" />
+          {videoSrc ? (
+            <video 
+              src={videoSrc} 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+            />
+          ) : (
+            <div className="w-24 h-24 border border-gold/10 rounded-full animate-pulse" />
+          )}
         </div>
         
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gold/5 pointer-events-none" />
@@ -92,6 +105,7 @@ export function Pillars({ onOpenModal }: PillarsProps) {
                 "Eliminación de cuellos de botella operativos"
               ]}
               imageLabel="Infraestructura DM"
+              videoSrc="/captacion-automatizada.mp4"
             />
           </Reveal>
 
@@ -108,6 +122,7 @@ export function Pillars({ onOpenModal }: PillarsProps) {
                 "Escalabilidad sin carga de grabación"
               ]}
               imageLabel="Visual Acquisition"
+              videoSrc="/adquisicion-carruseles.mp4"
             />
           </Reveal>
         </div>
