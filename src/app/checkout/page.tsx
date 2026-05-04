@@ -103,13 +103,13 @@ export default function AdminDashboard() {
   }, [applications, selectedDay]);
 
   return (
-    <div className="min-h-screen bg-[#0a0907] text-ivory p-4 md:p-10 font-sans">
+    <div className="min-h-screen bg-[#0a1628] text-ivory p-4 md:p-10 font-sans">
       <style>{`
-        .rdp { --rdp-accent-color: #d4b078; --rdp-background-color: #1a1812; margin: 0; }
-        .rdp-day_selected { background-color: var(--rdp-accent-color) !important; color: #0a0907 !important; }
-        .rdp-button:hover:not([disabled]):not(.rdp-day_selected) { background-color: #1a1812; color: #d4b078; }
+        .rdp { --rdp-accent-color: #00e5ff; --rdp-background-color: #0d1b30; margin: 0; }
+        .rdp-day_selected { background-color: var(--rdp-accent-color) !important; color: #0a1628 !important; }
+        .rdp-button:hover:not([disabled]):not(.rdp-day_selected) { background-color: #0d1b30; color: #00e5ff; }
         .rdp-day_has_app { font-weight: bold; position: relative; }
-        .rdp-day_has_app::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background-color: #d4b078; }
+        .rdp-day_has_app::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background-color: #00e5ff; }
       `}</style>
 
       <div className="mx-auto max-w-[1400px]">

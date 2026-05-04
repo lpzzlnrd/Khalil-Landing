@@ -110,7 +110,7 @@ export function SchedulingModal({ open, onClose }: SchedulingModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="absolute inset-0 bg-[#0a0907]/90 backdrop-blur-sm"
+            className="absolute inset-0 bg-[#0a1628]/90 backdrop-blur-sm"
           />
 
           <motion.div

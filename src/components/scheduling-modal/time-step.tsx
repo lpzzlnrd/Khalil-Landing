@@ -134,7 +134,7 @@ export function TimeStep({ selectedDate, dateLabel, selectedTime, onSelect, onNe
       </div>
 
       {!sameZone && (
-        <div className="mb-4 border border-line bg-[rgba(212,176,120,0.06)] px-4 py-2.5 font-mono text-[11px] text-ivory-dim">
+        <div className="mb-4 border border-line bg-[rgba(0,229,255,0.06)] px-4 py-2.5 font-mono text-[11px] text-ivory-dim">
           Horarios en tu zona ({userTZLabel}) junto a la hora del negocio
         </div>
       )}
@@ -146,7 +146,7 @@ export function TimeStep({ selectedDate, dateLabel, selectedTime, onSelect, onNe
             disabled={!s.available || loading}
             className={`border px-2.5 py-3.5 text-center font-mono text-[13px] transition-all duration-200 ${
               selectedTime === s.time
-                ? "border-gold bg-gold text-[#0a0907]"
+                ? "border-gold bg-gold text-[#0a1628]"
                 : s.available
                 ? "border-line text-ivory hover:border-gold hover:text-gold"
                 : "pointer-events-none border-line text-muted-2 line-through opacity-40"

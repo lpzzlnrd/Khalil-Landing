@@ -9,9 +9,7 @@ import { Pillars } from "@/components/pillars";
 import { Deliverables } from "@/components/deliverables";
 import { Venom } from "@/components/venom";
 import { Team } from "@/components/team";
-import { CtaBand } from "@/components/cta-band";
 import { CaseStudies } from "@/components/case-studies";
-import { Trust } from "@/components/trust";
 import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
@@ -32,9 +30,8 @@ export default function Home() {
       <Deliverables onOpenModal={openModal} />
       <Venom />
       <Team />
-      <CtaBand onOpenModal={openModal} />
-      <CaseStudies />
-      <Trust onOpenModal={openModal} />
+      {/* CtaBand removed — "Aplicar" button is now below deliverables */}
+      <CaseStudies onOpenModal={openModal} />
       <Faq />
       <FinalCta onOpenModal={openModal} />
       <Footer />

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fraunces, inter, jetbrainsMono } from "@/lib/fonts";
+import { fraunces, inter, jetbrainsMono, montserrat } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} ${montserrat.variable}`}
     >
       <body>{children}</body>
     </html>
