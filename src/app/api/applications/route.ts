@@ -5,6 +5,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendConfirmationEmail, sendAdminNotification } from "@/lib/email";
 import { BUSINESS_TZ } from "@/lib/timezone";
+import { createMeetEvent } from "@/lib/google-calendar";
 
 // Rate limit: 10 applications per minute per IP
 const applicationLimiter = rateLimit({ interval: 60_000, maxRequests: 10 });
@@ -72,11 +73,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate a simple Google Meet link (pattern-based)
-    const meetingId = Math.random().toString(36).substring(2, 5) + "-" + 
-                      Math.random().toString(36).substring(2, 6) + "-" + 
-                      Math.random().toString(36).substring(2, 5);
-    const meetingLink = `https://meet.google.com/${meetingId}`;
+    // Create real Google Calendar event with Meet link
+    let meetingLink: string | null = null;
+    try {
+      meetingLink = await createMeetEvent({
+        name: parsed.name,
+        email: parsed.email,
+        date: parsed.date,
+        time: parsed.time,
+      });
+    } catch (e) {
+      console.error("[google-calendar] Failed to create Meet event:", e);
+    }
+    // Fallback if Google Calendar is not configured
+    if (!meetingLink) {
+      const meetingId = Math.random().toString(36).substring(2, 5) + "-" +
+                        Math.random().toString(36).substring(2, 6) + "-" +
+                        Math.random().toString(36).substring(2, 5);
+      meetingLink = `https://meet.google.com/${meetingId}`;
+    }
 
     // Guardar en Supabase
     const { data, error } = await supabaseAdmin
