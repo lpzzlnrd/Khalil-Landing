@@ -91,7 +91,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex w-full items-center justify-center gap-2.5 rounded-[2px] bg-gold px-[26px] py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-[#0a0907] transition-all duration-300 ease-[cubic-bezier(.2,.7,.2,1)] hover:bg-ivory hover:-translate-y-px disabled:opacity-50"
+            className="inline-flex w-full items-center justify-center gap-2.5 rounded-[2px] bg-gold px-[26px] py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-[#0a1628] transition-all duration-300 ease-[cubic-bezier(.2,.7,.2,1)] hover:bg-ivory hover:-translate-y-px disabled:opacity-50"
           >
             {loading ? "Verificando..." : "Acceder"}
           </button>

@@ -3,30 +3,55 @@
 import { Shell } from "@/components/ui/shell";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal } from "@/components/ui/reveal";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
-export function CaseStudies() {
+interface CaseStudiesProps {
+  onOpenModal: () => void;
+}
+
+export function CaseStudies({ onOpenModal }: CaseStudiesProps) {
   return (
     <section className="py-[clamp(80px,12vw,160px)]">
       <Shell>
-        <div className="mb-[clamp(60px,8vw,100px)] grid grid-cols-[1fr_1.2fr] items-end gap-[60px] max-[780px]:grid-cols-1 max-[780px]:gap-6">
-          <Reveal>
-            <Eyebrow>Casos de éxito</Eyebrow>
-            <h2 className="mt-5 font-serif text-[clamp(38px,5vw,68px)] font-light leading-[1.05] tracking-[-0.02em]">
-              Casos <em className="text-gold italic font-light">de éxito</em>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="max-w-[62ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
-              Cientos de victorias y varios casos de éxito. Todos estuvieron en esta misma página y decidieron entrar.
-            </p>
-          </Reveal>
-        </div>
+        {/* CASOS DE ÉXITO */}
+        <Reveal>
+          <div className="text-center mb-12">
+            <Eyebrow centered className="justify-center">Casos de éxito</Eyebrow>
+          </div>
+        </Reveal>
 
         <Reveal>
-          <div className="border border-line p-[clamp(28px,3.4vw,42px)]">
-            <p className="font-serif text-[clamp(18px,1.8vw,26px)] leading-[1.5] text-ivory font-light">
-              Entre ellos se encuentran personas que ya tenían un negocio formado en Instagram, pero se encontraban atascados en los 100K/mes, y gracias al sistema pudieron escalar su facturación sin aumentar su carga operativa (Volumen de trabajo y cantidad de tiempo dedicado).
+          <p className="text-center font-serif text-[clamp(22px,2.5vw,36px)] font-light leading-[1.4] text-ivory mb-12 max-w-[48ch] mx-auto">
+            Cientos de victorias y varios casos de éxito. <strong className="text-gold font-medium">Todos estuvieron en esta misma página y decidieron entrar.</strong>
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <motion.div
+            whileHover={{
+              boxShadow: "0 0 40px rgba(0,229,255,0.08), inset 0 0 40px rgba(0,229,255,0.04)",
+            }}
+            className="border border-line p-[clamp(28px,3.4vw,42px)] transition-all duration-500"
+          >
+            <p className="font-serif text-[clamp(16px,1.5vw,22px)] leading-[1.6] text-ivory font-light">
+              Entre ellos se encuentran personas que ya tenían un negocio formado en Instagram,{" "}
+              <strong className="text-gold font-medium">pero se encontraban estancados en los 100K/mes</strong>, y gracias al sistema pudieron escalar su facturación sin aumentar su carga operativa{" "}
+              <span className="text-muted/60">(Volumen de trabajo y cantidad de tiempo dedicado)</span>.
             </p>
+          </motion.div>
+        </Reveal>
+
+        {/* POR QUÉ CONFIAR */}
+        <Reveal delay={0.1}>
+          <div className="mt-16 text-center">
+            <Eyebrow centered className="justify-center">¿Por qué confiar?</Eyebrow>
+            <p className="mt-6 mx-auto max-w-[52ch] text-[clamp(15px,1.2vw,18px)] leading-[1.6] text-ivory-dim">
+              Cientos de miles de euros extra en facturación en negocios y marcas personales grandes que comenzaron a utilizar nuestro sistema.
+            </p>
+            <div className="mt-8">
+              <Button onClick={onOpenModal}>Aplicar</Button>
+            </div>
           </div>
         </Reveal>
       </Shell>

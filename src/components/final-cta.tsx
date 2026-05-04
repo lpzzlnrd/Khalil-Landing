@@ -12,7 +12,7 @@ interface FinalCtaProps {
 export function FinalCta({ onOpenModal }: FinalCtaProps) {
   return (
     <section className="relative overflow-hidden border-t border-line py-[clamp(100px,14vw,180px)] pb-[clamp(80px,10vw,140px)] text-center">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(212,176,120,0.14)_0%,transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(0,229,255,0.10)_0%,transparent_60%)]" />
       <Shell>
         <Reveal>
           <Eyebrow centered className="justify-center">
@@ -27,7 +27,7 @@ export function FinalCta({ onOpenModal }: FinalCtaProps) {
             Presionando el botón de abajo podrás agendar una llamada con nosotros, en la que primero analizaremos si te podemos ayudar, y en caso de ser así, podremos continuar. En el botón puedes ver cuántas plazas quedan en este momento ↓
           </p>
           <Button size="xl" onClick={onOpenModal}>
-            Agendar llamada
+            Aplicar
           </Button>
         </Reveal>
       </Shell>

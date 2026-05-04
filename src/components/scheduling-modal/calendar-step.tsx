@@ -119,7 +119,7 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
   return (
     <div>
       {/* Urgency banner */}
-      <div className="mb-7 flex items-center gap-3.5 border border-line-strong bg-[rgba(212,176,120,0.08)] px-[18px] py-3.5 text-[13px] text-ivory-dim">
+      <div className="mb-7 flex items-center gap-3.5 border border-line-strong bg-[rgba(0,229,255,0.08)] px-[18px] py-3.5 text-[13px] text-ivory-dim">
         <span className="h-2 w-2 flex-none rounded-full bg-gold animate-[blink_1.6s_infinite]" />
         <span>
           Quedan <strong className="font-medium text-gold">2 plazas</strong> este mes. <strong className="font-medium text-gold"> Agenda tu llamada antes de que se agoten.</strong>
@@ -166,7 +166,7 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
               disabled={!c.available}
               className={`relative flex aspect-square items-center justify-center border font-serif text-[15px] transition-all duration-200 ${
                 isSelected(c.date)
-                  ? "border-gold bg-gold text-[#0a0907]"
+                  ? "border-gold bg-gold text-[#0a1628]"
                   : c.available
                   ? "border-transparent text-ivory hover:border-gold hover:text-gold"
                   : "cursor-default border-transparent text-muted-2"

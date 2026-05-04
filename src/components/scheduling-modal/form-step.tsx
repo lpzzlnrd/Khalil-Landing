@@ -47,29 +47,29 @@ export function FormStep({ dateLabel, timeLabel, timezoneNote, onSubmit, onBack,
       {/* Basic Info */}
       <div className="space-y-6">
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cómo te llamas?</label>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cómo te llamas?</label>
           <input
             type="text" required minLength={2} placeholder="Ej: Leonardo Correa"
             value={name} onChange={(e) => setName(e.target.value)}
-            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
+            className="w-full border border-line-strong bg-[rgba(0,229,255,0.04)] rounded-[2px] px-4 py-3 font-serif text-base text-ivory outline-none transition-colors focus:border-gold focus:bg-[rgba(0,229,255,0.06)] placeholder:text-muted-2"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu número? (Incluye prefijo +)</label>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cuál es tu número? (Incluye prefijo +)</label>
           <input
             type="tel" required placeholder="Ej: +34 123456789"
             value={phone} onChange={(e) => setPhone(e.target.value)}
-            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
+            className="w-full border border-line-strong bg-[rgba(0,229,255,0.04)] rounded-[2px] px-4 py-3 font-serif text-base text-ivory outline-none transition-colors focus:border-gold focus:bg-[rgba(0,229,255,0.06)] placeholder:text-muted-2"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu correo?</label>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cuál es tu correo?</label>
           <input
             type="email" required placeholder="Ej: pablomatinez@gmail.com"
             value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
+            className="w-full border border-line-strong bg-[rgba(0,229,255,0.04)] rounded-[2px] px-4 py-3 font-serif text-base text-ivory outline-none transition-colors focus:border-gold focus:bg-[rgba(0,229,255,0.06)] placeholder:text-muted-2"
           />
         </div>
       </div>
@@ -99,11 +99,11 @@ export function FormStep({ dateLabel, timeLabel, timezoneNote, onSubmit, onBack,
         </div>
 
         <div>
-          <label className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">¿Cuál es tu Instagram?</label>
+          <label className="mb-4 block font-serif text-base text-ivory">¿Cuál es tu Instagram?</label>
           <input
             type="text" required placeholder="Ej: @kleystudio"
             value={instagram} onChange={(e) => setInstagram(e.target.value)}
-            className="w-full border-b border-line-strong bg-transparent py-2 font-serif text-lg text-ivory outline-none focus:border-gold"
+            className="w-full border border-line-strong bg-[rgba(0,229,255,0.04)] rounded-[2px] px-4 py-3 font-serif text-base text-ivory outline-none transition-colors focus:border-gold focus:bg-[rgba(0,229,255,0.06)] placeholder:text-muted-2"
           />
         </div>
 
@@ -179,7 +179,7 @@ export function FormStep({ dateLabel, timeLabel, timezoneNote, onSubmit, onBack,
       </div>
 
       {/* Summary */}
-      <div className="flex gap-8 border border-line bg-[rgba(212,176,120,0.05)] px-5 py-4">
+      <div className="flex gap-8 border border-line bg-[rgba(0,229,255,0.05)] px-5 py-4">
         <div>
           <div className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted">Fecha</div>
           <div className="mt-1 font-serif text-base text-ivory">{dateLabel}</div>

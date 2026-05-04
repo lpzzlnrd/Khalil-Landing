@@ -22,7 +22,7 @@ export function CtaBand({ onOpenModal }: CtaBandProps) {
           </h2>
           <div className="mt-3.5">
             <Button size="xl" onClick={onOpenModal}>
-              Aplicar ahora
+              Aplicar
             </Button>
           </div>
         </Reveal>
