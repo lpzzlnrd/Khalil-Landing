@@ -58,7 +58,7 @@ const groups = [
 
 export function Deliverables({ onOpenModal }: DeliverablesProps) {
   return (
-    <section className="py-24 bg-[#081422]">
+    <section className="py-10 bg-[#081422]">
       <Shell>
         <Reveal>
           <div className="text-center mb-20">
@@ -110,8 +110,8 @@ export function Deliverables({ onOpenModal }: DeliverablesProps) {
         </div>
 
         <Reveal delay={0.4}>
-          <div className="mt-16 flex justify-center">
-            <Button onClick={onOpenModal} className="px-12 py-7 text-lg uppercase tracking-widest">
+          <div className="mt-8 flex justify-center">
+            <Button onClick={onOpenModal} className="px-14 py-3 text-sm uppercase tracking-widest rounded-none">
               Aplicar
             </Button>
           </div>

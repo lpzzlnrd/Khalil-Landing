@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Shell } from "@/components/ui/shell";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal } from "@/components/ui/reveal";
@@ -23,7 +24,7 @@ const PillarCard = ({
   num: string,
   title: string,
   titleEm: string,
-  desc: string,
+  desc: React.ReactNode,
   items: string[],
   imageLabel: string,
   videoSrc?: string,
@@ -83,7 +84,7 @@ const PillarCard = ({
 
 export function Pillars({ onOpenModal }: PillarsProps) {
   return (
-    <section className="py-20">
+    <section className="py-8">
       <Shell>
         <div className="border-t border-line">
           {/* Adquisición FIRST */}
@@ -92,7 +93,12 @@ export function Pillars({ onOpenModal }: PillarsProps) {
               num="I."
               title="Adquisición"
               titleEm="con Carruseles"
-              desc="Un negocio que vende no puede depender únicamente del tiempo para grabar del creador, eso no es escalable en el tiempo, aquí la solución: Un sistema que publique carruseles de forma diaria, que funcione como un segundo flujo de contenido totalmente independiente del tiempo del creador. Pensados para captar clientes de forma constante."
+              desc={<>
+                Un negocio que vende no puede depender únicamente del tiempo para grabar del creador, eso no es escalable en el tiempo, aquí la solución:{" "}
+                <span className="mt-3 block text-[#00e5ff]">
+                  Un sistema que publique carruseles de forma diaria, que funcione como un segundo flujo de contenido totalmente independiente del tiempo del creador. Pensados para captar clientes de forma constante.
+                </span>
+              </>}
               items={[
                 "Contenido diario 100% independiente",
                 "Estrategia de carruseles de alta conversión",
@@ -123,8 +129,8 @@ export function Pillars({ onOpenModal }: PillarsProps) {
         </div>
 
         <Reveal delay={0.2}>
-          <div className="mt-20 flex justify-center">
-            <Button onClick={onOpenModal} className="px-12 py-7 text-lg uppercase tracking-widest">
+          <div className="mt-8 flex justify-center">
+            <Button onClick={onOpenModal} className="px-14 py-3 text-sm uppercase tracking-widest rounded-none">
               Aplicar
             </Button>
           </div>

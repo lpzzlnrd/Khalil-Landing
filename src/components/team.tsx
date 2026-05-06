@@ -15,7 +15,7 @@ const roles = [
 
 export function Team() {
   return (
-    <section className="py-[clamp(80px,12vw,160px)]">
+    <section className="py-[clamp(40px,6vw,80px)]">
       <Shell>
         <div className="mb-[clamp(60px,8vw,100px)] grid grid-cols-[1fr_1.2fr] items-end gap-[60px] max-[780px]:grid-cols-1 max-[780px]:gap-6">
           <Reveal>

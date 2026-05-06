@@ -46,7 +46,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export function Faq() {
   return (
-    <section className="py-[clamp(80px,12vw,160px)]">
+    <section className="py-[clamp(40px,6vw,80px)]">
       <Shell>
         <div className="grid grid-cols-[1fr_1.4fr] items-start gap-[clamp(40px,6vw,80px)] max-[860px]:grid-cols-1">
           <Reveal>

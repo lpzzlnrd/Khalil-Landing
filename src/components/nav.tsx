@@ -35,9 +35,9 @@ export function Nav({ onOpenModal }: NavProps) {
           <Image
             src="/KS.png"
             alt="KLEY Studio"
-            width={80}
-            height={40}
-            className="h-8 w-auto"
+            width={120}
+            height={60}
+            className="h-12 w-auto mix-blend-screen opacity-90"
           />
         </div>
       </Shell>
