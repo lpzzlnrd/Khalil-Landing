@@ -20,7 +20,7 @@ const features = [
 
 export function Venom() {
   return (
-    <section className="border-t border-b border-line bg-gradient-to-b from-[#081422] to-bg py-[clamp(80px,12vw,160px)]">
+    <section className="border-t border-b border-line bg-gradient-to-b from-[#081422] to-bg py-[clamp(40px,6vw,80px)]">
       <Shell>
         <div className="grid grid-cols-[0.9fr_1.1fr] items-start gap-[clamp(40px,6vw,80px)] max-[860px]:grid-cols-1">
           <Reveal>

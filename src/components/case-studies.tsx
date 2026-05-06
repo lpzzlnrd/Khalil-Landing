@@ -12,7 +12,7 @@ interface CaseStudiesProps {
 
 export function CaseStudies({ onOpenModal }: CaseStudiesProps) {
   return (
-    <section className="py-[clamp(80px,12vw,160px)]">
+    <section className="py-[clamp(40px,6vw,80px)]">
       <Shell>
         {/* CASOS DE ÉXITO */}
         <Reveal>

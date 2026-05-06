@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Carousels Selling — KLEY STUDIO",
   description:
     "Instala un Sistema de Adquisición Paralelo en tu Instagram. Done-for-you para coaches, consultores e infoproductores que ya facturan +100K€/mes.",
+  icons: {
+    icon: "/KS.png",
+    shortcut: "/KS.png",
+    apple: "/KS.png",
+  },
 };
 
 export default function RootLayout({

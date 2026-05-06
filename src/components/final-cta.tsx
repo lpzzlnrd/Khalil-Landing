@@ -11,7 +11,7 @@ interface FinalCtaProps {
 
 export function FinalCta({ onOpenModal }: FinalCtaProps) {
   return (
-    <section className="relative overflow-hidden border-t border-line py-[clamp(100px,14vw,180px)] pb-[clamp(80px,10vw,140px)] text-center">
+    <section className="relative overflow-hidden border-t border-line py-[clamp(48px,7vw,90px)] text-center">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(0,229,255,0.10)_0%,transparent_60%)]" />
       <Shell>
         <Reveal>

@@ -13,16 +13,16 @@ interface HeroProps {
 
 export function Hero({ onOpenModal }: HeroProps) {
   return (
-    <section className="relative pt-[clamp(40px,8vw,80px)] pb-[clamp(60px,10vw,120px)] overflow-hidden">
+    <section className="relative pt-[clamp(24px,4vw,48px)] pb-[clamp(32px,6vw,72px)] overflow-hidden">
       <Shell>
         <div className="flex flex-col items-center text-center">
           <Reveal>
-            <h1 className="mt-4 mb-8 font-serif text-[clamp(32px,4.5vw,64px)] font-light leading-[1.15] tracking-[-0.02em] max-w-[22ch] mx-auto uppercase">
+            <h1 className="mt-2 mb-4 font-serif text-[clamp(22px,2.8vw,42px)] font-light leading-[1.15] tracking-[-0.02em] max-w-[26ch] mx-auto uppercase">
               Instala un <em className="text-gold italic font-light">Sistema de Adquisición Paralelo</em> o{" "}
               <em className="text-gold italic font-light">&ldquo;Embudo Dual&rdquo;</em> en tu Instagram: agenda más llamadas y vende más{" "}
               <span className="underline decoration-gold underline-offset-4">sin aumentar carga operativa</span> a tu negocio.
             </h1>
-            <p className="max-w-[62ch] mx-auto text-[clamp(15px,1.05vw,18px)] leading-[1.7] text-ivory-dim mb-12">
+            <p className="max-w-[62ch] mx-auto text-[clamp(15px,1.1vw,19px)] leading-[1.7] text-ivory-dim mb-6">
               Un sistema diseñado para escalar a coaches, consultores e infoproductores que ya venden constantemente en Instagram y buscan aumentar el volumen sin aumentar su carga operativa.
             </p>
           </Reveal>
@@ -52,8 +52,8 @@ export function Hero({ onOpenModal }: HeroProps) {
 
           {/* CTA */}
           <Reveal delay={0.4}>
-            <div className="mt-16">
-              <Button onClick={onOpenModal} className="px-12 py-7 text-lg uppercase tracking-widest">
+            <div className="mt-8">
+              <Button onClick={onOpenModal} className="px-14 py-3 text-sm uppercase tracking-widest rounded-none">
                 Aplicar
               </Button>
             </div>
