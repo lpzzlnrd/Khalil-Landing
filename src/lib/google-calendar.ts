@@ -4,7 +4,8 @@ import { BUSINESS_TZ } from "@/lib/timezone";
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
 type CalendarAuth = {
-  auth: google.auth.JWT | google.auth.OAuth2;
+  // Use a loose type to avoid build-time complaints from the googleapis type exports.
+  auth: any;
   canInviteAttendees: boolean;
 };
 
@@ -74,7 +75,7 @@ export async function createMeetEvent(data: {
   const endM = String(endMinutes % 60).padStart(2, "0");
   const endDateTime = `${data.date}T${endH}:${endM}:00`;
 
-  const requestBody: Parameters<typeof calendar.events.insert>[0]["requestBody"] = {
+  const requestBody: any = {
     summary: `Reunión Estratégica — ${data.name}`,
     description: `Sesión estratégica de Carousels Selling con ${data.name} (${data.email})`,
     start: {
