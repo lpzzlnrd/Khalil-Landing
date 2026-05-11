@@ -18,7 +18,7 @@ const MONTHS = [
 const DAYS = ["L", "M", "MI", "J", "V", "S", "D"];
 
 // Possible slots per day (must match TimeStep)
-const TOTAL_SLOTS_COUNT = 11; 
+const TOTAL_SLOTS_COUNT = 9; 
 
 function formatLabel(d: Date) {
   return `${d.getDate()} de ${MONTHS[d.getMonth()]}`;
@@ -92,8 +92,9 @@ export function CalendarStep({ selectedDate, onSelect, onNext }: CalendarStepPro
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
-      // It's available if it's at least 24h in the future AND not full
-      const isAvailable = date >= tomorrow && !fullDates.has(toDateKey(date));
+      const isWeekday = date.getDay() >= 1 && date.getDay() <= 5;
+      // It's available if it's at least 24h in the future AND not full AND weekday
+      const isAvailable = date >= tomorrow && isWeekday && !fullDates.has(toDateKey(date));
       
       result.push({
         day: d,

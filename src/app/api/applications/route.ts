@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
           time: parsed.time,
           status: "pending",
           meeting_link: meetingLink,
+          answers: parsed.answers || {},
         },
       ])
       .select()

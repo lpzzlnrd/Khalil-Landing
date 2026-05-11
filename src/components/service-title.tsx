@@ -9,7 +9,7 @@ export function ServiceTitle() {
         <Reveal>
           <h2 className="font-serif text-[clamp(56px,11vw,168px)] font-light leading-[0.92] tracking-[-0.04em]">
             Carousels{" "}
-            <em className="block mt-1.5 text-gold italic font-light">Selling</em>
+            <em className="block mt-1.5 text-[#00e5ff] italic font-light">Selling</em>
           </h2>
         </Reveal>
       </Shell>

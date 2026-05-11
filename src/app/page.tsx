@@ -7,8 +7,6 @@ import { Hero } from "@/components/hero";
 import { ServiceTitle } from "@/components/service-title";
 import { Pillars } from "@/components/pillars";
 import { Deliverables } from "@/components/deliverables";
-import { Venom } from "@/components/venom";
-import { Team } from "@/components/team";
 import { CaseStudies } from "@/components/case-studies";
 import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
@@ -28,8 +26,6 @@ export default function Home() {
       <ServiceTitle />
       <Pillars onOpenModal={openModal} />
       <Deliverables onOpenModal={openModal} />
-      <Venom />
-      <Team />
       {/* CtaBand removed — "Aplicar" button is now below deliverables */}
       <CaseStudies onOpenModal={openModal} />
       <Faq />

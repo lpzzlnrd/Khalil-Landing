@@ -116,7 +116,12 @@ export function Pillars({ onOpenModal }: PillarsProps) {
               title="Captación"
               titleEm="Automatizada"
               reverse={true}
-              desc="Ante un aumento del volumen de entrada de leads, necesitas un sistema capaz afrontar dicho volumen y evitar cuellos de botella futuros. Aquí instalamos un sistema automático en tu cuenta que se encarga del flujo de leads, que permite que los setters solamente traten con leads muy calificados y no perder tiempo con curiosos."
+              desc={<>
+                Ante un aumento del volumen de entrada de leads, necesitas un sistema capaz afrontar dicho volumen y evitar cuellos de botella futuros.{" "}
+                <span className="mt-3 block text-[#00e5ff]">
+                  Aquí instalamos un sistema automático en tu cuenta que se encarga del flujo de leads, que permite que los setters solamente traten con leads muy calificados y no perder tiempo con curiosos.
+                </span>
+              </>}
               items={[
                 "Sistema paralelo de captación por DM",
                 "Flujo de leads pre-calificados",

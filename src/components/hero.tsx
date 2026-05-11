@@ -17,7 +17,7 @@ export function Hero({ onOpenModal }: HeroProps) {
       <Shell>
         <div className="flex flex-col items-center text-center">
           <Reveal>
-            <h1 className="mt-2 mb-4 font-serif text-[clamp(22px,2.8vw,42px)] font-light leading-[1.15] tracking-[-0.02em] max-w-[26ch] mx-auto uppercase">
+            <h1 className="mt-2 mb-4 font-serif text-[clamp(22px,2.8vw,42px)] font-light leading-[1.15] tracking-[-0.02em] max-w-[46ch] mx-auto uppercase">
               Instala un <em className="text-gold italic font-light">Sistema de Adquisición Paralelo</em> o{" "}
               <em className="text-gold italic font-light">&ldquo;Embudo Dual&rdquo;</em> en tu Instagram: agenda más llamadas y vende más{" "}
               <span className="underline decoration-gold underline-offset-4">sin aumentar carga operativa</span> a tu negocio.

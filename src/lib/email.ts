@@ -1,12 +1,24 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import ical, { ICalCalendarMethod } from "ical-generator";
 import { BUSINESS_TZ, BUSINESS_TZ_LABEL } from "@/lib/timezone";
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+const gmailUser = process.env.GMAIL_USER;
+const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+const fromEmail =
+  process.env.GMAIL_FROM_EMAIL ||
+  process.env.RESEND_FROM_EMAIL ||
+  (gmailUser ? `Kley Studio <${gmailUser}>` : "Kley Studio <noreply@kleystudio.com>");
 
-const fromEmail = process.env.RESEND_FROM_EMAIL || "Kley Studio <noreply@kleystudio.com>";
+const transporter =
+  gmailUser && gmailAppPassword
+    ? nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: gmailUser,
+          pass: gmailAppPassword,
+        },
+      })
+    : null;
 
 interface ApplicationData {
   name: string;
@@ -14,6 +26,10 @@ interface ApplicationData {
   date: string;
   time: string;
   meetingLink?: string;
+}
+
+function getMeetLink(data: ApplicationData) {
+  return data.meetingLink || "https://meet.google.com/";
 }
 
 /** Helper to generate ICS file content */
@@ -35,13 +51,13 @@ function generateICS(data: ApplicationData) {
     end,
     timezone: BUSINESS_TZ,
     summary: "Reunión Estratégica — Carousels Selling",
-    description: `Hola ${data.name}, aquí tienes el link para nuestra reunión: ${data.meetingLink}`,
-    location: data.meetingLink,
-    url: data.meetingLink,
+    description: `Hola ${data.name}, aquí tienes el link para nuestra reunión: ${getMeetLink(data)}`,
+    location: getMeetLink(data),
+    url: getMeetLink(data),
     organizer: {
       name: "Kley Studio",
-      email: "noreply@kleystudio.com"
-    }
+      email: gmailUser || "noreply@kleystudio.com",
+    },
   });
 
   return calendar.toString();
@@ -49,22 +65,23 @@ function generateICS(data: ApplicationData) {
 
 /** Send confirmation email to the applicant */
 export async function sendConfirmationEmail(data: ApplicationData) {
-  if (!resend) {
-    console.log("[email] Resend no configurado, email omitido:", data.email);
+  if (!transporter) {
+    console.log("[email] Gmail SMTP no configurado, email omitido:", data.email);
     return;
   }
 
   const icsContent = generateICS(data);
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: fromEmail,
     to: data.email,
     subject: "Confirmación de Cita — Carousels Selling",
     attachments: [
       {
         filename: "invite.ics",
-        content: Buffer.from(icsContent).toString("base64"),
-      }
+        content: icsContent,
+        contentType: "text/calendar; method=REQUEST; charset=UTF-8",
+      },
     ],
     html: `
       <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 28px; background: #0a1628; color: #e8f0f8;">
@@ -86,7 +103,7 @@ export async function sendConfirmationEmail(data: ApplicationData) {
           <p style="margin: 0; font-size: 16px; color: #00e5ff;">${data.date} a las ${data.time} ${BUSINESS_TZ_LABEL}</p>
           
           <p style="margin: 20px 0 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #5a7090;">Link de la reunión</p>
-          <a href="${data.meetingLink}" style="color: #e8f0f8; text-decoration: underline; font-size: 14px;">Unirse a Google Meet →</a>
+          <a href="${getMeetLink(data)}" style="color: #e8f0f8; text-decoration: underline; font-size: 14px;">Unirse a Google Meet →</a>
         </div>
 
         <p style="font-size: 13px; color: #5a7090; line-height: 1.6;">
@@ -103,11 +120,11 @@ export async function sendConfirmationEmail(data: ApplicationData) {
 
 /** Notify admin about a new application */
 export async function sendAdminNotification(data: ApplicationData & { phone: string }) {
-  if (!resend) return;
+  if (!transporter) return;
   const adminEmail = process.env.ADMIN_EMAIL;
   if (!adminEmail) return;
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: fromEmail,
     to: adminEmail,
     subject: `Nueva cita agendada: ${data.name}`,
@@ -118,7 +135,7 @@ export async function sendAdminNotification(data: ApplicationData & { phone: str
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Teléfono:</strong> ${data.phone}</p>
         <p><strong>Fecha/Hora:</strong> ${data.date} @ ${data.time}</p>
-        <p><strong>Link Meet:</strong> <a href="${data.meetingLink}" style="color: #00e5ff;">${data.meetingLink}</a></p>
+        <p><strong>Link Meet:</strong> <a href="${getMeetLink(data)}" style="color: #00e5ff;">${getMeetLink(data)}</a></p>
         <br/>
         <a href="${process.env.NEXT_PUBLIC_APP_URL || ""}/checkout" style="color: #00e5ff;">Gestionar en el panel →</a>
       </div>
@@ -128,14 +145,14 @@ export async function sendAdminNotification(data: ApplicationData & { phone: str
 
 /** Generic Reminder Email */
 export async function sendReminderEmail(data: ApplicationData, type: "2h" | "30m" | "now") {
-  if (!resend) return;
+  if (!transporter) return;
 
   const title = type === "now" ? "¡Empezamos ya!" : `Recordatorio: Faltan ${type}`;
   const message = type === "now" 
     ? "La reunión está empezando ahora mismo. ¡Te esperamos!" 
     : `Tu sesión estratégica comienza en ${type === "2h" ? "2 horas" : "30 minutos"}.`;
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: fromEmail,
     to: data.email,
     subject: `${title} — Carousels Selling`,
@@ -144,7 +161,7 @@ export async function sendReminderEmail(data: ApplicationData, type: "2h" | "30m
         <h2 style="color: #00e5ff; font-weight: 300;">${title}</h2>
         <p style="color: #a8b8cc; font-size: 16px;">${message}</p>
         <div style="margin: 30px 0; padding: 20px; border: 1px solid rgba(0,229,255,0.2);">
-          <a href="${data.meetingLink}" style="display: block; text-align: center; background: #00e5ff; color: #0a1628; padding: 12px; text-decoration: none; font-weight: bold; border-radius: 4px;">
+          <a href="${getMeetLink(data)}" style="display: block; text-align: center; background: #00e5ff; color: #0a1628; padding: 12px; text-decoration: none; font-weight: bold; border-radius: 4px;">
             ENTRAR A LA REUNIÓN
           </a>
         </div>
