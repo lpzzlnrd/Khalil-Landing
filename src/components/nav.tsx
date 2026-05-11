@@ -18,9 +18,9 @@ export function Nav({ onOpenModal }: NavProps) {
       className="sticky top-0 z-40 border-b border-line bg-[rgba(10,22,40,0.72)] backdrop-blur-[14px]"
     >
       <Shell className="flex h-[72px] items-center justify-between">
-        {/* Left: Program Name in Montserrat Bold */}
-        <span className="font-[var(--font-montserrat)] text-[15px] font-bold tracking-[0.04em] text-ivory uppercase">
-          Carousels Selling
+        {/* Left: Program Name */}
+        <span className="font-serif text-[clamp(20px,2vw,24px)] font-light text-ivory">
+          Carousels <em className="text-[#00e5ff] italic font-light">Selling</em>
         </span>
 
         {/* Right: CTA + Logo */}

@@ -13,6 +13,7 @@ interface DeliverablesProps {
 const groups = [
   {
     title: "Sistema de Contenido",
+    description: null,
     items: [
       "Creación del \"Espejo de marca\"",
       "Análisis profundo de contenido y KPIs",
@@ -28,6 +29,7 @@ const groups = [
   },
   {
     title: "Sistema \"VENOM\"",
+    description: "Se trata de una automatización de Manychat con las siguientes funcionalidades:",
     items: [
       "Captación de leads 24/7",
       "Inteligencia Artificial Integrada",
@@ -44,8 +46,8 @@ const groups = [
   },
   {
     title: "Equipo 1:1",
+    description: "Acceso directo a grupo privado con el equipo de trabajo específico para tu negocio",
     items: [
-      "Acceso directo a grupo privado con el equipo de trabajo específico para tu negocio",
       "Acceso directo a Kley",
       "Plan personalizado",
       "Adaptación específica de los sistemas",
@@ -86,9 +88,14 @@ export function Deliverables({ onOpenModal }: DeliverablesProps) {
                 <span className="font-mono text-[10px] tracking-[0.3em] text-gold uppercase">
                   0{idx + 1}
                 </span>
-                <h3 className="mt-4 mb-8 font-serif text-2xl text-ivory">
+                <h3 className="mt-4 mb-4 font-serif text-2xl text-ivory">
                   {group.title}
                 </h3>
+                {group.description && (
+                  <p className="mb-6 text-sm text-ivory-dim/80 leading-[1.6]">
+                    {group.description}
+                  </p>
+                )}
                 <div className="space-y-3">
                   {group.items.map((item, i) => (
                     <div

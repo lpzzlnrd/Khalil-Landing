@@ -206,6 +206,11 @@ export default function AdminDashboard() {
                       <span className={`px-3 py-1 border text-[9px] uppercase tracking-widest font-mono ${statusColors[app.status]}`}>
                         {app.status}
                       </span>
+                      {app.meeting_link && (
+                        <a href={app.meeting_link} target="_blank" onClick={(e) => e.stopPropagation()} className="text-gold hover:text-ivory transition-colors flex items-center gap-1" title="Unirse a Google Meet">
+                          <ExternalLink size={14} />
+                        </a>
+                      )}
                       <ExternalLink size={14} className="text-muted group-hover:text-gold transition-colors" />
                     </div>
                   </div>
