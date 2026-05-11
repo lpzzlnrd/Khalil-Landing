@@ -3,21 +3,49 @@ import { BUSINESS_TZ } from "@/lib/timezone";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
-function getAuth() {
+type CalendarAuth = {
+  auth: google.auth.JWT | google.auth.OAuth2;
+  canInviteAttendees: boolean;
+};
+
+function getServiceAccountAuth(): CalendarAuth | null {
   const jsonB64 = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!jsonB64) return null;
 
   try {
     const creds = JSON.parse(Buffer.from(jsonB64, "base64").toString("utf-8"));
-    return new google.auth.JWT({
+    const auth = new google.auth.JWT({
       email: creds.client_email,
       key: creds.private_key,
       scopes: SCOPES,
     });
+    return { auth, canInviteAttendees: false };
   } catch {
     console.error("[google-calendar] Failed to parse service account JSON");
     return null;
   }
+}
+
+function getOAuth2Auth(): CalendarAuth | null {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+
+  if (!clientId || !clientSecret || !refreshToken) return null;
+
+  const auth = new google.auth.OAuth2(
+    clientId,
+    clientSecret,
+    "https://developers.google.com/oauthplayground"
+  );
+  auth.setCredentials({ refresh_token: refreshToken });
+
+  return { auth, canInviteAttendees: true };
+}
+
+function getAuth(): CalendarAuth | null {
+  // Prefer OAuth2 to support Meet + attendees in personal Gmail.
+  return getOAuth2Auth() || getServiceAccountAuth();
 }
 
 /**
@@ -30,14 +58,14 @@ export async function createMeetEvent(data: {
   date: string; // YYYY-MM-DD in business TZ
   time: string; // HH:MM in business TZ
 }): Promise<string | null> {
-  const auth = getAuth();
-  if (!auth) {
+  const authConfig = getAuth();
+  if (!authConfig) {
     console.log("[google-calendar] Not configured, skipping Meet creation");
     return null;
   }
 
   const calendarId = process.env.GOOGLE_CALENDAR_ID || "primary";
-  const calendar = google.calendar({ version: "v3", auth });
+  const calendar = google.calendar({ version: "v3", auth: authConfig.auth });
 
   const startDateTime = `${data.date}T${data.time}:00`;
   const [h, m] = data.time.split(":").map(Number);
@@ -46,37 +74,40 @@ export async function createMeetEvent(data: {
   const endM = String(endMinutes % 60).padStart(2, "0");
   const endDateTime = `${data.date}T${endH}:${endM}:00`;
 
+  const requestBody: Parameters<typeof calendar.events.insert>[0]["requestBody"] = {
+    summary: `Reunión Estratégica — ${data.name}`,
+    description: `Sesión estratégica de Carousels Selling con ${data.name} (${data.email})`,
+    start: {
+      dateTime: startDateTime,
+      timeZone: BUSINESS_TZ,
+    },
+    end: {
+      dateTime: endDateTime,
+      timeZone: BUSINESS_TZ,
+    },
+    conferenceData: {
+      createRequest: {
+        requestId: `kley-${data.date}-${data.time}-${Date.now()}`,
+        conferenceSolutionKey: { type: "hangoutsMeet" },
+      },
+    },
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: "email", minutes: 120 },
+        { method: "popup", minutes: 30 },
+      ],
+    },
+  };
+
+  if (authConfig.canInviteAttendees) {
+    requestBody.attendees = [{ email: data.email }];
+  }
+
   const event = await calendar.events.insert({
     calendarId,
     conferenceDataVersion: 1,
-    requestBody: {
-      summary: `Reunión Estratégica — ${data.name}`,
-      description: `Sesión estratégica de Carousels Selling con ${data.name} (${data.email})`,
-      start: {
-        dateTime: startDateTime,
-        timeZone: BUSINESS_TZ,
-      },
-      end: {
-        dateTime: endDateTime,
-        timeZone: BUSINESS_TZ,
-      },
-      // Service Accounts in personal Gmail calendars cannot invite attendees
-      // unless using Workspace Domain-Wide Delegation.
-      // The user receives the meeting details via Nodemailer confirmation email.
-      conferenceData: {
-        createRequest: {
-          requestId: `kley-${data.date}-${data.time}-${Date.now()}`,
-          conferenceSolutionKey: { type: "hangoutsMeet" },
-        },
-      },
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 120 },
-          { method: "popup", minutes: 30 },
-        ],
-      },
-    },
+    requestBody,
   });
 
   const meetLink = event.data.conferenceData?.entryPoints?.find(
