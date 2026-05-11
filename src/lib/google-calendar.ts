@@ -60,7 +60,9 @@ export async function createMeetEvent(data: {
         dateTime: endDateTime,
         timeZone: BUSINESS_TZ,
       },
-      attendees: [{ email: data.email }],
+      // Service Accounts in personal Gmail calendars cannot invite attendees
+      // unless using Workspace Domain-Wide Delegation.
+      // The user receives the meeting details via Nodemailer confirmation email.
       conferenceData: {
         createRequest: {
           requestId: `kley-${data.date}-${data.time}-${Date.now()}`,
