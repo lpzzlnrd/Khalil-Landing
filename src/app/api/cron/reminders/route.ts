@@ -63,28 +63,28 @@ export async function GET(req: NextRequest) {
       meetingLink: app.meeting_link,
     };
 
-    // 2h reminder: send when 90-130 min remain (window to avoid missing it)
-    if (!app.reminder_2h_sent && diffMin > 90 && diffMin <= 130) {
-      await sendReminderEmail(emailData, "2h");
+    // 12h reminder: send when 11h30m-12h30m remain (window to avoid missing it)
+    if (!app.reminder_2h_sent && diffMin > 690 && diffMin <= 750) {
+      await sendReminderEmail(emailData, "12h");
       await supabase.from("applications").update({ reminder_2h_sent: true }).eq("id", app.id);
       sent++;
-      console.log(`[cron/reminders] 2h reminder sent to ${app.email}`);
+      console.log(`[cron/reminders] 12h reminder sent to ${app.email}`);
     }
 
-    // 30m reminder: send when 20-40 min remain
-    if (!app.reminder_30m_sent && diffMin > 20 && diffMin <= 40) {
-      await sendReminderEmail(emailData, "30m");
+    // 1h reminder: send when 50-70 min remain
+    if (!app.reminder_30m_sent && diffMin > 50 && diffMin <= 70) {
+      await sendReminderEmail(emailData, "1h");
       await supabase.from("applications").update({ reminder_30m_sent: true }).eq("id", app.id);
       sent++;
-      console.log(`[cron/reminders] 30m reminder sent to ${app.email}`);
+      console.log(`[cron/reminders] 1h reminder sent to ${app.email}`);
     }
 
-    // "now" reminder: send when -5 to +5 min (right at start time)
-    if (!app.reminder_now_sent && diffMin > -5 && diffMin <= 5) {
-      await sendReminderEmail(emailData, "now");
+    // 10m reminder: send when 5-15 min remain
+    if (!app.reminder_now_sent && diffMin > 5 && diffMin <= 15) {
+      await sendReminderEmail(emailData, "10m");
       await supabase.from("applications").update({ reminder_now_sent: true }).eq("id", app.id);
       sent++;
-      console.log(`[cron/reminders] "now" reminder sent to ${app.email}`);
+      console.log(`[cron/reminders] 10m reminder sent to ${app.email}`);
     }
   }
 
