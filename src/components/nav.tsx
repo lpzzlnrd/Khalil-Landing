@@ -33,11 +33,12 @@ export function Nav({ onOpenModal }: NavProps) {
             Aplicar
           </Button>
           <Image
-            src="/KS.png"
+            src="/LOGO%20PNG%20KLEY%20STUDIO.png"
             alt="KLEY Studio"
-            width={120}
-            height={60}
-            className="h-12 w-auto mix-blend-screen opacity-90"
+            width={220}
+            height={80}
+            className="h-11 w-auto object-contain"
+            priority
           />
         </div>
       </Shell>

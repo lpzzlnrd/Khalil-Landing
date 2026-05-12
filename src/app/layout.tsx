@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   description:
     "Instala un Sistema de Adquisición Paralelo en tu Instagram. Done-for-you para coaches, consultores e infoproductores que ya facturan +100K€/mes.",
   icons: {
-    icon: "/KS.png",
-    shortcut: "/KS.png",
-    apple: "/KS.png",
+    icon: "/KS%20FAVICON%20ORIGINAL%20CUADRADO.png",
+    shortcut: "/KS%20FAVICON%20ORIGINAL%20CUADRADO.png",
+    apple: "/KS%20FAVICON%20ORIGINAL%20CUADRADO.png",
   },
 };
 
