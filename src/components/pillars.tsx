@@ -104,7 +104,7 @@ export function Pillars({ onOpenModal }: PillarsProps) {
                 "Estrategia de carruseles de alta conversión",
                 "Escalabilidad sin carga de grabación"
               ]}
-              imageLabel="Visual Acquisition"
+              imageLabel="EMBUDO DUAL"
               videoSrc="/adquisicion-carruseles.mp4"
             />
           </Reveal>
