@@ -45,8 +45,19 @@ function getOAuth2Auth(): CalendarAuth | null {
 }
 
 function getAuth(): CalendarAuth | null {
-  // Prefer OAuth2 to support Meet + attendees in personal Gmail.
-  return getOAuth2Auth() || getServiceAccountAuth();
+  const oauth = getOAuth2Auth();
+  if (oauth) {
+    console.log("[google-calendar] Using OAuth2 Authentication");
+    return oauth;
+  }
+
+  const service = getServiceAccountAuth();
+  if (service) {
+    console.log("[google-calendar] Using Service Account Authentication (Warning: Meet links might fail)");
+    return service;
+  }
+
+  return null;
 }
 
 /**
@@ -68,6 +79,11 @@ export async function createMeetEvent(data: {
   const calendarId = process.env.GOOGLE_CALENDAR_ID || "primary";
   const calendar = google.calendar({ version: "v3", auth: authConfig.auth });
 
+  // requestId must be alphanumeric and unique
+  const safeDate = data.date.replace(/-/g, "");
+  const safeTime = data.time.replace(/:/g, "");
+  const requestId = `kley${safeDate}${safeTime}${Date.now()}`.substring(0, 64);
+
   const startDateTime = `${data.date}T${data.time}:00`;
   const [h, m] = data.time.split(":").map(Number);
   const endMinutes = h * 60 + m + 30; // 30 min duration
@@ -88,7 +104,7 @@ export async function createMeetEvent(data: {
     },
     conferenceData: {
       createRequest: {
-        requestId: `kley-${data.date}-${data.time}-${Date.now()}`,
+        requestId,
         conferenceSolutionKey: { type: "hangoutsMeet" },
       },
     },
@@ -105,15 +121,23 @@ export async function createMeetEvent(data: {
     requestBody.attendees = [{ email: data.email }];
   }
 
-  const event = await calendar.events.insert({
-    calendarId,
-    conferenceDataVersion: 1,
-    requestBody,
-  });
+  try {
+    const event = await calendar.events.insert({
+      calendarId,
+      conferenceDataVersion: 1,
+      requestBody,
+    });
 
-  const meetLink = event.data.conferenceData?.entryPoints?.find(
-    (ep) => ep.entryPointType === "video"
-  )?.uri;
+    const meetLink = event.data.conferenceData?.entryPoints?.find(
+      (ep) => ep.entryPointType === "video"
+    )?.uri;
 
-  return meetLink || null;
+    return meetLink || null;
+  } catch (error: any) {
+    console.error("[google-calendar] Failed to create Meet event:", error.message);
+    if (error.response?.data) {
+      console.error("[google-calendar] API Error Details:", JSON.stringify(error.response.data, null, 2));
+    }
+    return null;
+  }
 }
